@@ -23,6 +23,7 @@ cp --remove-destination ./clean/ClientSource/ ./amI1;
 cp --remove-destination ./clean/ClientSource/ ./amI2;
 cp --remove-destination ./clean/ClientSource/ ./amI3;
 cp --remove-destination ./clean/ClientSource/ ./amI4;
+rm -rf ./clean
 cp ./config.txt ./amI1/;
 cp ./config.txt ./amI2/;
 cp ./config.txt ./amI3/;
