@@ -824,7 +824,19 @@ class FractureDB
         $rowDataP = $rowData[0];
         return $rowDataP;
     }
-    
+    function getNextRow($table, $filterField = '', $filterValue = '', $idFieldName = 'id', $limit = 1)
+    {
+        if ($filterField !== '') {
+            $queryInsert = $filterField . ' = \'' . $filterValue . '\' ';
+        } else {
+            $queryInsert = '';
+        }
+        $query    = 'SELECT * FROM `' . $table . '` WHERE ' . $queryInsert . ' LIMIT ' . $limit . ';';
+        #echo "\n".$query."\n";
+        $rowData  = $this->query($query);
+        $rowDataP = $rowData[0];
+        return $rowDataP;
+    }
     function getField($table, $field, $id)
     {
         $query    = 'SELECT ' . $field . ' FROM ' . $table . ' WHERE id = ' . $id . ';';
@@ -1129,7 +1141,7 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
         #print_r($randomPA);
         #echo '$randomPA=';print_r($randomPA);echo '.';
         #echo 'RandomP='.$randomP . ".\n";
-        $rowToAppend = $db->getRandomRow('am_urls', 'project', $randomP);
+        $rowToAppend = $db->getNextRow('am_urls', 'project', $randomP);
         if ($rowToAppend['barrel'] !== '0') {
             #do nothing, the URL is already taken
             echo '';
