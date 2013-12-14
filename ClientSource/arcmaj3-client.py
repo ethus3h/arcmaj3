@@ -1076,12 +1076,12 @@ metadata.description=Basic crawl starting with useful defaults
     hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mkdir h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/')
     hres=''
-    #The port: 42643=ARCAE=ARCMAJ3 missing some letters
-    hlog_add(run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)[0])
-    hlog_add(run('curl -v -d "createpath='+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'&action=create" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
+    #hlog_add(run('curl -v -d "createpath='+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'&action=create" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     f = open('h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/crawler-beans.cxml', 'w')
     f.write(job_data)
     f.close()
+    #The port: 42643=ARCAE=ARCMAJ3 missing some letters
+    hlog_add(run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)[0])
     hlog_add(run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     hlog_add(run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     time.sleep(0.5)
