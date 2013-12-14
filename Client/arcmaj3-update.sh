@@ -1,4 +1,5 @@
 #!/bin/bash
+
 mkdir amc;
 cd amc;
 mkdir clean;
