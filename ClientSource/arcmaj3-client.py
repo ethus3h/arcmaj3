@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.3, 13 December 2013
+# Version 2.17.4, 14 December 2013 a.mn.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -63,6 +63,10 @@ try:
     NSConfLmDs = open('config.txt', 'r').readlines()[4].strip()
 except Exception, e:
     NSConfLmDs = ''
+try:
+    HerWebPort = open('config.txt', 'r').readlines()[5].strip()
+except Exception, e:
+    HerWebPort = '42643'
 collection = 'opensource' # Replace with "opensource" if you are not an admin of the collection
 # end configuration
 
@@ -1069,19 +1073,19 @@ metadata.description=Basic crawl starting with useful defaults
 """
     #heritrix it
     log_add('Beginning heritrix processing')
-    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:42643/engine')[0])
+    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mkdir h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/')
     hres=''
     #The port: 42643=ARCAE=ARCMAJ3 missing some letters
-    hlog_add(run('h3/heritrix-3.1.1/bin/heritrix -a admin -p 42643')[0])
-    hlog_add(run('curl -v -d "createpath='+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'&action=create" -k -u admin:admin --anyauth --location https://localhost:42643/engine')[0])
+    hlog_add(run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)[0])
+    hlog_add(run('curl -v -d "createpath='+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'&action=create" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     f = open('h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/crawler-beans.cxml', 'w')
     f.write(job_data)
     f.close()
-    hlog_add(run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
-    hlog_add(run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     time.sleep(0.5)
-    hlog_add(run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     # poll job dir for completion
     jobFinished=False
     while not jobFinished:
@@ -1094,12 +1098,12 @@ metadata.description=Basic crawl starting with useful defaults
             time.sleep(5)
             hlog_add('Heritrix not finished')
             print 'Heritrix not finished'
-            run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
-            run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
+            run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
+            run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
             time.sleep(0.5)
-            run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
-    hlog_add(run('curl -v -d "action=teardown" -k -u admin:admin --anyauth --location https://localhost:42643/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
-    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:42643/engine')[0])
+            run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
+    hlog_add(run('curl -v -d "action=teardown" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mv h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+' .')
     os.system('mv '+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/latest/warcs/*.warc.gz .')
     #hlog_add(hres)
