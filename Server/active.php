@@ -6,6 +6,10 @@
 #Return all currently-out barrels to pool (follow this up with an expire-old-barrels from the management tool):
 #
 #UPDATE `am_barrels` SET dateAssigned=0 WHERE status=0
+#
+#See whatever's running on the database:
+#
+#SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
 #error_reporting(E_ALL);
