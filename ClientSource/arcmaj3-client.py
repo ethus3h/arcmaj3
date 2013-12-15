@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.4, 14 December 2013 a.mn.
+# Version 2.17.5, 15 December 2013 a.mn.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -26,8 +26,8 @@
 #
 # TODO: retain link depth data. Only crawl for a set number of hops?
 # TODO: [underway] critical: create a bucket timeout system
-# TODO: create an easy way to add projects (e. g. visit http://futuramerlin.com/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
-# TODO: create an easy way to add URLs (e. g. visit http://futuramerlin.com/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
+# TODO: create an easy way to add projects (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
+# TODO: create an easy way to add URLs (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
 # TODO: user statistics tracker
 # TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
 # TODO: minor bug - don't overwrite existing files with same filename in the same identifier
@@ -176,7 +176,7 @@ now = datetime.datetime.now()
 convertlang = {'ar': 'Arabic', 'de': 'German', 'en': 'English', 'es': 'Spanish', 'fr': 'French', 'it': 'Italian', 'ja': 'Japanese', 'nl': 'Dutch', 'pl': 'Polish', 'pt': 'Portuguese', 'ru': 'Russian'}
 # This is going to be the barrel data
 timeRunning=now.strftime("%Y-%m-%d-%H-%M-%S-%f-%Z_E")
-#os.system('bash -c \'wget -O barrelData.txt "http://futuramerlin.com/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\'')
+#os.system('bash -c \'wget -O barrelData.txt "http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\'')
 errored = False
 def run(command):
     global errored
@@ -206,10 +206,10 @@ def hlog_add(text):
     f = open('amc_H3_log-'+timeRunning+'.log', 'a')
     f.write(text+"\n")
     f.close()
-#vamp='bash -c \'wget -O barrelData.txt "http://futuramerlin.com/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\''
+#vamp='bash -c \'wget -O barrelData.txt "http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\''
 #barrelFetchResult = check_output(vamp, stderr=subprocess.STDOUT, shell=True)
 barrelID='NoBarrel'
-barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://futuramerlin.com/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
+barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://130.111.242.99/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
 barrelFetchResult=barrelFetchResult[0]
 listfile = 'barrelData.txt'
 barrelDF = open(listfile, 'r').read().strip().splitlines()
@@ -1180,7 +1180,7 @@ metadata.description=Basic crawl starting with useful defaults
     #active.php?handler=1&handlerNeeded=arcmaj3&amtask=up
     #curl = ['curl', '--location']
     #curl += [ '--data', '\'handler=1&handlerNeeded=arcmaj3&amtask=up&uploadedBarrelData='+pageLinks5.encode('base64')+'&failedUrlData='+failedUrls.encode('base64')+'\'', '-A', "'"+UserAgentChoice+"'" ]
-    #curl += [ "http://futuramerlin.com/d/r/active.php" ]
+    #curl += [ "http://130.111.242.99/d/r/active.php" ]
     #curlline = ' '.join(curl)
     #log_add('Executing curl request: ')
     #log_add(curlline+'\n')
@@ -1223,8 +1223,8 @@ metadata.description=Basic crawl starting with useful defaults
     ulog_add('Sleeping 30 seconds to give IA a chance to catch up…')
     time.sleep(30)
     postdata='handler=1&handlerNeeded=arcmaj3&amtask=up'+'&barrelSize='+str(int(barrelSize))+''+'&verd='+verd+'&amloc='+'AMJ_BarrelData_'+barrelID+'_' + uuidG +'.' +timeRunning
-    ulog_add("\n\nPOST data sent to http://futuramerlin.com/d/r/active.php: \n\n"+postdata+"\n\n(Barrel ID: "+barrelID+")\n\n")
-    req = urllib2.Request('http://futuramerlin.com/d/r/active.php', postdata)
+    ulog_add("\n\nPOST data sent to http://130.111.242.99/d/r/active.php: \n\n"+postdata+"\n\n(Barrel ID: "+barrelID+")\n\n")
+    req = urllib2.Request('http://130.111.242.99/d/r/active.php', postdata)
     req.add_header('User-agent',UserAgentChoice)
     fp = urllib2.urlopen(req)
     #errored = False
