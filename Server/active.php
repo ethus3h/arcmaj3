@@ -684,7 +684,7 @@ class FractureDB
     }
     function query($query, $failed = False)
     {
-        echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -714,7 +714,7 @@ class FractureDB
     }
     function query_num($query, $failed = False)
     {
-        echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -733,7 +733,7 @@ class FractureDB
     function queryInsert($query)
     {
         global $displayDebugMessages;
-        echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -1302,7 +1302,7 @@ function arcmaj3_handler()
             echo "\n\n" . 'Failed entry data URL: ' . $BarrelFailedListLoc . "\n\n";
             echo "Decoding barrel data...\n";
             $ulBarrel = preg_replace('/[\n]+/', "\n", str_replace('\nhttp://http://', 'http://', gzdecode($uBarrelData)));
-            echo 'ulBarrel:' . "\n\n";
+            #echo 'ulBarrel:' . "\n\n";
             //print_r($ulBarrel);
             echo "\n\n";
             echo "\n\n";
@@ -1328,15 +1328,15 @@ function arcmaj3_handler()
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb              = $db->getTable('am_projects');
-echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
+#echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
                 //print_r($pps);
-                echo "\n\n<br><br><hr><br><br>Beginning processing url: ".$value.".\n\n<br><br>";
-                echo '<pre>';
+                #echo "\n\n<br><br><hr><br><br>Beginning processing url: ".$value.".\n\n<br><br>";
+                #echo '<pre>';
 // foreach ($pps as $ppid) {
 //                     if (stripos($value, $ppid['urlPattern']) !== false) {
 //                         $testProjects     = True;
@@ -1368,9 +1368,9 @@ $testProjects     = True;
 $potentialProject = $potentialProjectA['id'];
 
 
-    echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
-    echo '$potentialProject=';print_r($potentialProject);echo '.';
-                echo '</pre>';
+    #echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
+    #echo '$potentialProject=';print_r($potentialProject);echo '.';
+                #echo '</pre>';
 
                 #$potentialProject = get_domain_simple($value);
                 #$projects  = $db->getRow('am_projects', 'id', $potentialProject);
@@ -1389,7 +1389,7 @@ $potentialProject = $potentialProjectA['id'];
                 //                 echo "<br>\n";
 
             }
-echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
+#echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
             //             foreach ($urlsFinished as $value) {
             //                 #Set completed to true.
             //                 $db->setField('am_urls', 'completed', 1, $value);
@@ -1397,11 +1397,11 @@ echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
 //             $pps              = $db->getColumn('am_projects', 'urlPattern');
             #$pptb              = $db->getTable('am_projects');
 
-echo '<H1>ENTERING FAILED ROW PROCESSING</H1>';
+#echo '<H1>ENTERING FAILED ROW PROCESSING</H1>';
             foreach ($failedData as $value) {
 
                 #TODO: Increment failedAttempts, set completed to false, set barrel to 0
-                echo "\n\n<br><br><hr><br><br>Beginning working with failed row: ".$value.".\n\n<br><br>";
+                #echo "\n\n<br><br><hr><br><br>Beginning working with failed row: ".$value.".\n\n<br><br>";
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
@@ -1435,7 +1435,7 @@ $potentialProject = $potentialProjectA['id'];
                 $failedRowId       = $failedRowIdRecord['id'];
                 #echo "\n\n<br><br><hr><br><br>Beginning working with failed row (ID $failedRowId): ".$value.".\n\n<br><br>";
 
-                echo "\n\nWorking with failed row $value, ID $failedRowId";
+                #echo "\n\nWorking with failed row $value, ID $failedRowId";
 //                 $currentFailed = $db->getField('am_urls', 'failedAttempts', $failedRowId);
 //                 $currentFailed++;
                 $db->query('UPDATE `am_urls` SET failedAttempts = failedAttempts+1, completed=0 WHERE id='.$failedRowId.';');
