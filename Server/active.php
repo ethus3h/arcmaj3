@@ -12,8 +12,8 @@
 #SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+#error_reporting(E_ALL);
+ini_set("display_errors", 0);
 $displayDebugMessages = False;
 //IMPORTANT VARIABLES
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {
