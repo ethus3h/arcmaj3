@@ -98,6 +98,9 @@ barrelSize=0
      
 uuidG=str(uuid.uuid4())
 verd='2'
+# from http://stackoverflow.com/questions/18609778/solved-python3-convert-all-characters-to-html-entities
+def htmlEntities( string ):
+    return ''.join(['&#{0};'.format(ord(char)) for char in string])
 #GET USER-AGENT
 def getUserAgent():
     platform = random.choice(['Macintosh', 'Windows', 'X11'])
