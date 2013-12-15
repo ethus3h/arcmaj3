@@ -483,7 +483,7 @@ metadata.description=Basic crawl starting with useful defaults
 
 # URLS HERE
 
-"""+cgi.escape("\n".join(wikis),True).encode("ascii", "xmlcharrefreplace").replace("\x00",'%00').replace("\x0c",'%0C').replace("\x0b",'%0B')+"""
+"""+cgi.escape("\n".join(wikis),True).encode("ascii", "xmlcharrefreplace").replace("\x00",'%00').replace("\x0c",'%0C').replace("\x0b",'%0B').replace("\x08",'%08')+"""
 
     </prop>
    </props>
