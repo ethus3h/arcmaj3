@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.7.2, 15 December 2013 a.mn..
+#Futuramerlin Active Scripting Library. Version 0.86.8, 15 December 2013.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -12,8 +12,8 @@
 #SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
-error_reporting(E_ALL);
-ini_set("display_errors", 1);
+#error_reporting(E_ALL);
+ini_set("display_errors", 0);
 $displayDebugMessages = False;
 //IMPORTANT VARIABLES
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {
@@ -1450,7 +1450,7 @@ function arcmaj3_handler()
                     $db->setField('am_urls', 'barrel', 0, $failedRowId);
                 }
             }
-            echo '<H1>EXITING FAILED ROW PROCESSING</H1>';
+            #echo '<H1>EXITING FAILED ROW PROCESSING</H1>';
             
             $db->setField('am_barrels', 'status', 1, $barrelId);
             $db->close();
@@ -1460,6 +1460,7 @@ function arcmaj3_handler()
                 arcmaj3_barrel_expire($barrelId);
                 echo 'Expired barrel ' . $barrelId . '.';
             }
+            echo "\n\n<br><br>\n\nBarrel notification processing finished.";
             
         } else {
             if (Rq('amtask') == 'down') {
