@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.7.1, 15 December 2013 a.mn..
+#Futuramerlin Active Scripting Library. Version 0.86.7.2, 15 December 2013 a.mn..
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -1205,7 +1205,7 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
         #print_r($rowToAppend);
         #The chosen URL has now been updated if necessary. Update the barrel column to reflect its addition to the barrel.
         
-        
+        $UrlNotAppended=False;
         #Next line can be commented out for debugging this function. UNCOMMENT WHEN DONE.
         if($rowToAppend['id']>1){
         $db->setField('am_urls', 'barrel', $newBarrelId, $rowToAppend['id']);
@@ -1217,8 +1217,8 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
         
         #$pInt[$randChInd] = $rowToAppend['location'];
         #If the URL is already in the barrel, do nothing. Otherwise, add it to the barrel.
-        #if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended===True) {
-        if (stripos($barrelRet, $rowToAppend['id']) !== false) {
+        if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended===True) {
+        #if (stripos($barrelRet, $rowToAppend['id']) !== false) {
             #do nothing, the URL is already in here
             echo '';
         } else {
