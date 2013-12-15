@@ -684,7 +684,7 @@ class FractureDB
     }
     function query($query, $failed = False)
     {
-        echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -714,7 +714,7 @@ class FractureDB
     }
     function query_num($query, $failed = False)
     {
-        echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -733,7 +733,7 @@ class FractureDB
     function queryInsert($query)
     {
         global $displayDebugMessages;
-        echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
+        #echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -838,6 +838,24 @@ class FractureDB
             $queryInsert = '';
         }
         $query    = 'SELECT * FROM `' . $table . '` WHERE ' . $queryInsert . ' LIMIT ' . $limit . ';';
+        #echo "\n".$query."\n";
+        $rowData  = $this->query($query);
+        $rowDataP = $rowData[0];
+        return $rowDataP;
+    }
+    function getNextRowEF($table, $filterField = '', $filterValue = '', $custom = '',$idFieldName = 'id', $limit = 1)
+    {
+        if ($filterField !== '') {
+            $queryInsert = $filterField . ' = \'' . $filterValue . '\' ';
+        } else {
+            $queryInsert = '';
+        }
+//         if ($custom !== '') {
+//             $queryInsert2 = $filterField2 . ' = \'' . $filterValue2 . '\' ';
+//         } else {
+//             $queryInsert2 = '';
+//         }
+        $query    = 'SELECT * FROM `' . $table . '` WHERE ' . $queryInsert . ' AND ' . $custom . ' LIMIT ' . $limit . ';';
         #echo "\n".$query."\n";
         $rowData  = $this->query($query);
         $rowDataP = $rowData[0];
@@ -1080,7 +1098,7 @@ function get_domain_simple($url)
 
 function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsToCrawl = '')
 {
-   /* #echo 'returning barrel';
+    #echo 'returning barrel';
     $projects = $db->getColumn_num('am_projects', 'id', 'status', '0');
     $prArrayv = array();
     foreach ($projects as $key => $value) {
@@ -1133,9 +1151,10 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
     #echo "\n\nENTERING DEBUG SECTION\n\n";
     #print_r($pInt);
     $urlCounter = 0;
+//     echo 'Urls per bucket: '. $urlsPerBucket . ".\n";
     while ($urlCounter < $urlsPerBucket) {
-        #echo 'Entered URL choice loop';
-        #echo $urlCounter . "\n";
+//         echo 'Entered URL choice loop';
+//         echo $urlCounter . "\n";
         $randomChoice = array_rand($pInt);
         #echo $randomChoice . "\n";
         #echo '$randomChoice=';print_r($randomChoice);echo '.';
@@ -1146,60 +1165,66 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
             $randomP = $randomPA[0];
         } else {
             $randomP = $randomPA;
+    }
+    #print_r($randomPA);
+    #echo '$randomPA=';print_r($randomPA);echo '.';
+    #echo 'RandomP='.$randomP . ".\n";
+    #$rowToAppend = $db->getNextRow('am_urls', 'project', $randomP);
+    $rowToAppend = $db->getNextRowEF('am_urls', 'project', $randomP, 'barrel = 0');
+    #echo '$rowToAppend=';print_r($rowToAppend);echo '.';
+//         if ($rowToAppend['barrel'] !== '0') {
+//             #do nothing, the URL is already taken
+//             echo '';
+//         } else {
+        echo '';
+        if ($rowToAppend['project'] == '0') {
+            #This is a stopgap measure until the # of barrel 0 rows goes down. Remove this block of code then.
+            #What this block of code does is check each row chosen to get added to the barrel that has its Project listed as 0, check it against the Projects table, and if it matches an available project, update the URLs table to reflect that.
+            #All URL patterns are in $pps.
+            $pps              = $db->getColumn('am_projects', 'urlPattern');
+            $testProjects     = False;
+            $potentialProject = '';
+            //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
+            //print_r($pps);
+            foreach ($pps as $ppid) {
+                #Operate on each URL pattern from the Projects table. If the selected row contains a URL pattern, set $testProjects to True and $potentialProject to the URL pattern it matched.
+                if (stripos($rowToAppend['location'], $ppid['urlPattern']) !== false) {
+                    $testProjects     = True;
+                    $potentialProject = $ppid['urlPattern'];
+                }
+            }
+            #$potentialProject = get_domain_simple($value);
+            #$projects contains the row from Projects corresponding to the URL pattern that matched the selected URL.
+            $projects  = $db->getRow('am_projects', 'urlPattern', $potentialProject);
+            #$projectId contains the ID of the project that the current URL matched. If the matched ID is other than 0, update the URLs table to reflect this.
+            $projectId = $projects['id'];
+            if ($projectId !== 0) {
+                $db->setField('am_urls', 'project', $projectId, $rowToAppend['id']);
+            }
         }
-        #print_r($randomPA);
-        #echo '$randomPA=';print_r($randomPA);echo '.';
-        #echo 'RandomP='.$randomP . ".\n";
-        $rowToAppend = $db->getNextRow('am_urls', 'project', $randomP);
-        if ($rowToAppend['barrel'] !== '0') {
-            #do nothing, the URL is already taken
+        #print_r($rowToAppend);
+        #The chosen URL has now been updated if necessary. Update the barrel column to reflect its addition to the barrel.
+        
+        
+        #Next line can be commented out for debugging this function. UNCOMMENT WHEN DONE.
+        if($rowToAppend['id']>1){
+        $db->setField('am_urls', 'barrel', $newBarrelId, $rowToAppend['id']);
+        }
+        else {
+        $UrlNotAppended=True;
+        }
+        
+        
+        #$pInt[$randChInd] = $rowToAppend['location'];
+        #If the URL is already in the barrel, do nothing. Otherwise, add it to the barrel.
+        if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended) {
+            #do nothing, the URL is already in here
             echo '';
         } else {
-            if ($rowToAppend['project'] == '0') {
-                #This is a stopgap measure until the # of barrel 0 rows goes down. Remove this block of code then.
-                #What this block of code does is check each row chosen to get added to the barrel that has its Project listed as 0, check it against the Projects table, and if it matches an available project, update the URLs table to reflect that.
-                #All URL patterns are in $pps.
-                $pps              = $db->getColumn('am_projects', 'urlPattern');
-                $testProjects     = False;
-                $potentialProject = '';
-                //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
-                //print_r($pps);
-                foreach ($pps as $ppid) {
-                    #Operate on each URL pattern from the Projects table. If the selected row contains a URL pattern, set $testProjects to True and $potentialProject to the URL pattern it matched.
-                    if (stripos($rowToAppend['location'], $ppid['urlPattern']) !== false) {
-                        $testProjects     = True;
-                        $potentialProject = $ppid['urlPattern'];
-                    }
-                }
-                #$potentialProject = get_domain_simple($value);
-                #$projects contains the row from Projects corresponding to the URL pattern that matched the selected URL.
-                $projects  = $db->getRow('am_projects', 'urlPattern', $potentialProject);
-                #$projectId contains the ID of the project that the current URL matched. If the matched ID is other than 0, update the URLs table to reflect this.
-                $projectId = $projects['id'];
-                if ($projectId !== 0) {
-                    $db->setField('am_urls', 'project', $projectId, $rowToAppend['id']);
-                }
-            }
-            #print_r($rowToAppend);
-            #The chosen URL has now been updated if necessary. Update the barrel column to reflect its addition to the barrel.
-            
-            
-            #Next line can be commented out for debugging this function. UNCOMMENT WHEN DONE.
-            
-            $db->setField('am_urls', 'barrel', $newBarrelId, $rowToAppend['id']);
-            
-            
-            
-            #$pInt[$randChInd] = $rowToAppend['location'];
-            #If the URL is already in the barrel, do nothing. Otherwise, add it to the barrel.
-            if (stripos($barrelRet, $rowToAppend['id']) !== false) {
-                #do nothing, the URL is already in here
-                echo '';
-            } else {
-                $barrelRet = $barrelRet . $rowToAppend['location'] . "\n";
-                $urlCounter++;
-            }
+            $barrelRet = $barrelRet . $rowToAppend['location'] . "\n";
+            $urlCounter++;
         }
+        #}
     }
     #print_r($pInt);
     #echo "\n\nLEAVING DEBUG SECTION\n\n";
@@ -1207,8 +1232,8 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
     #print_r($pInt);
     #$returnBarrel = implode("\n", $pInt);
     #print_r($returnBarrel);
-    $returnBarrel = $barrelRet; */
-    $returnBarrel = 'Test barrel result.';
+    $returnBarrel = $barrelRet;
+    #$returnBarrel = 'Test barrel result.';
     return $returnBarrel;
 }
 function arcmaj3_barrel_expire($barrelId)
@@ -1385,7 +1410,7 @@ function arcmaj3_handler()
                 //                 echo $rowToReturn['location'] . "\n";
                 //                 $urlCounter++;
                 //             }
-                echo '<br><br>Page served using ' . $db->queryCount . ' queries.<br><br>';
+                #echo '<br><br>Page served using ' . $db->queryCount . ' queries.<br><br>';
                 $db->close();
                 // echo "http://drive.google.com/\n";
                 // echo "http://wretch.cc/\n";
