@@ -12,8 +12,8 @@
 #SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
-#error_reporting(E_ALL);
-ini_set("display_errors", 0);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 $displayDebugMessages = False;
 //IMPORTANT VARIABLES
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {
@@ -684,7 +684,7 @@ class FractureDB
     }
     function query($query, $failed = False)
     {
-        #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -714,7 +714,7 @@ class FractureDB
     }
     function query_num($query, $failed = False)
     {
-        #echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -733,7 +733,7 @@ class FractureDB
     function queryInsert($query)
     {
         global $displayDebugMessages;
-        #echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -1055,6 +1055,7 @@ if (!function_exists("gzdecode")) {
 }
 function get_url($url)
 #From http://www.howtogeek.com/howto/programming/php-get-the-contents-of-a-web-page-rss-feed-or-xml-file-into-a-string-variable/ and http://stackoverflow.com/questions/5522636/get-file-content-from-a-url
+# and from http://stackoverflow.com/questions/13988365/what-are-the-possible-reasons-for-curl-error-60-on-an-https-site
 {
     $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
     $crl       = curl_init();
@@ -1063,10 +1064,15 @@ function get_url($url)
     curl_setopt($crl, CURLOPT_RETURNTRANSFER, true);
     curl_setopt($crl, CURLOPT_USERAGENT, $userAgent);
     curl_setopt($crl, CURLOPT_BINARYTRANSFER, true);
+    curl_setopt($crl, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($crl, CURLOPT_SSL_VERIFYHOST, false);
     curl_setopt($crl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($crl, CURLOPT_CONNECTTIMEOUT, $timeout);
+    #print_r($crl);
     $ret = curl_exec($crl);
+    $error_no = curl_errno($crl);
     curl_close($crl);
+    print $error_no;
     return $ret;
 }
 function get_domain($url)
@@ -1281,19 +1287,20 @@ function arcmaj3_handler()
             //         $ulFailed   = file_get_contents($_FILES['failedUrlData']['tmp_name']);
             $BarrelUrlListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.lst';
             $uBarrelData      = get_url($BarrelUrlListLoc);
+            echo $uBarrelData;
             #echo $uBarrelData;
             echo "\n\n" . 'List data URL: ' . $BarrelUrlListLoc;
             $BarrelFailedListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'failed.lst';
             $uBarrelFailed       = get_url($BarrelFailedListLoc);
             #echo gzdecode($uBarrelFailed);
             echo "\n\n" . 'Failed entry data URL: ' . $BarrelFailedListLoc . "\n\n";
-            #echo "Decoding barrel data...\n";
+            echo "Decoding barrel data...\n";
             $ulBarrel = preg_replace('/[\n]+/', "\n", str_replace('\nhttp://http://', 'http://', gzdecode($uBarrelData)));
             echo 'ulBarrel:' . "\n\n";
             //print_r($ulBarrel);
             echo "\n\n";
             echo "\n\n";
-            #echo "Decoding failed URL data...\n";
+            echo "Decoding failed URL data...\n";
             $ulFailed   = preg_replace('/[\n]+/', "\n", gzdecode($uBarrelFailed));
             $ulBarrel   = str_replace("\r", "\n", $ulBarrel);
             $ulFailed   = str_replace("\r", "\n", $ulFailed);
