@@ -1326,7 +1326,7 @@ function arcmaj3_handler()
             #Set status to 1. Set who to $barrelUserName.
             $db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
-            $pps              = $db->getColumn('am_projects', 'urlPattern');
+            #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb              = $db->getTable('am_projects');
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
@@ -1336,25 +1336,36 @@ function arcmaj3_handler()
                 //print_r($pps);
                 echo "\n\n<br><br><hr><br><br>Beginning processing url: ".$value.".\n\n<br><br>";
                 echo '<pre>';
-foreach ($pps as $ppid) {
-                    if (stripos($value, $ppid['urlPattern']) !== false) {
-                        $testProjects     = True;
-                        #$potentialProject = $ppid['id'];
-    echo '$ppid=';print_r($ppid);echo '.';
-    #echo '$pptb=';print_r($pptb);echo '.';
-                        foreach ($pptb as $value) {
-if(in_array($ppid['urlPattern'],$value))
-{
-                        $potentialProjectA = $value;
+// foreach ($pps as $ppid) {
+//                     if (stripos($value, $ppid['urlPattern']) !== false) {
+//                         $testProjects     = True;
+//                         #$potentialProject = $ppid['id'];
+//     echo '$ppid=';print_r($ppid);echo '.';
+//     #echo '$pptb=';print_r($pptb);echo '.';
+//                         foreach ($pptb as $value) {
+// if(in_array($ppid['urlPattern'],$value))
+// {
+//                         $potentialProjectA = $value;
+// 
+// }
+// }
+// #                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+// 
+//                         #$ppAstep1=array_map(in_array)
+//                         $potentialProject = $potentialProjectA['id'];
+//                     }
+//                 }
+
+foreach ($pptb as $pprow){
+
+if(in_array($pprow['urlPattern'])) {
+$potentialProjectA = $pprow;
+}
 
 }
-}
-#                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+$potentialProject = $potentialProjectA['id'];
 
-                        #$ppAstep1=array_map(in_array)
-                        $potentialProject = $potentialProjectA['id'];
-                    }
-                }
+
     echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
     echo '$potentialProject=';print_r($potentialProject);echo '.';
                 echo '</pre>';
