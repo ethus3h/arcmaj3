@@ -744,7 +744,7 @@ class FractureDB
             #print $query;
         }
         catch (PDOException $e) {
-            if (displayDebugMessages) {
+            if ($displayDebugMessages) {
                 print("Error: " . $e->getMessage());
             }
         }
@@ -1328,6 +1328,7 @@ function arcmaj3_handler()
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb              = $db->getTable('am_projects');
+echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
                 $testProjects     = False;
@@ -1360,6 +1361,7 @@ foreach ($pptb as $pprow){
 
 if(stripos($value, $pprow['urlPattern']) !== false) {
 $potentialProjectA = $pprow;
+$testProjects     = True;
 }
 
 }
@@ -1385,26 +1387,43 @@ $potentialProject = $potentialProjectA['id'];
                 //                 echo ', URL ';
                 //                 echo $value;
                 //                 echo "<br>\n";
+
             }
+echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
             //             foreach ($urlsFinished as $value) {
             //                 #Set completed to true.
             //                 $db->setField('am_urls', 'completed', 1, $value);
             //             }
-            $pps              = $db->getColumn('am_projects', 'urlPattern');
-            $pptb              = $db->getTable('am_projects');
+//             $pps              = $db->getColumn('am_projects', 'urlPattern');
+            #$pptb              = $db->getTable('am_projects');
+
+echo '<H1>ENTERING FAILED ROW PROCESSING</H1>';
             foreach ($failedData as $value) {
+
                 #TODO: Increment failedAttempts, set completed to false, set barrel to 0
+                echo "\n\n<br><br><hr><br><br>Beginning working with failed row: ".$value.".\n\n<br><br>";
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
                 //print_r($pps);
+
+foreach ($pptb as $pprow){
+
+if(stripos($value, $pprow['urlPattern']) !== false) {
+$potentialProjectA = $pprow;
+$testProjects     = True;
+}
+
+}
+$potentialProject = $potentialProjectA['id'];
+/*
                 foreach ($pps as $ppid) {
                     if (stripos($value, $ppid['urlPattern']) !== false) {
                         $testProjects     = True;
                         $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
                         $potentialProject = $potentialProjectA['id'];
                     }
-                }
+                }*/
                 #$potentialProject = get_domain_simple($value);
 #                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
 /*                 $projects  = $potentialProjectA;
@@ -1413,16 +1432,21 @@ $potentialProject = $potentialProjectA['id'];
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 $failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
                 $failedRowId       = $failedRowIdRecord['id'];
+                #echo "\n\n<br><br><hr><br><br>Beginning working with failed row (ID $failedRowId): ".$value.".\n\n<br><br>";
+
                 echo "\n\nWorking with failed row $value, ID $failedRowId";
-                $currentFailed = $db->getField('am_urls', 'failedAttempts', $failedRowId);
-                $currentFailed++;
-                $db->setField('am_urls', 'failedAttempts', $currentFailed, $failedRowId);
-                $db->setField('am_urls', 'completed', 0, $failedRowId);
+//                 $currentFailed = $db->getField('am_urls', 'failedAttempts', $failedRowId);
+//                 $currentFailed++;
+                $db->query('UPDATE `am_urls` SET failedAttempts = failedAttempts+1, completed=0 WHERE id='.$failedRowId.';');
+//                 $db->setField('am_urls', 'failedAttempts', $currentFailed, $failedRowId);
+//                 $db->setField('am_urls', 'completed', 0, $failedRowId);
                 #Permanently fail URLs that have failed 100 times.
                 if ($failedRowIdRecord['failedAttempts'] < 100) {
                     $db->setField('am_urls', 'barrel', 0, $failedRowId);
                 }
             }
+echo '<H1>EXITING FAILED ROW PROCESSING</H1>';
+
             $db->setField('am_barrels', 'status', 1, $barrelId);
             $db->close();
             if (count($barrelData) < 2) {
