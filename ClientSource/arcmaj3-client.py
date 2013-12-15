@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.5, 15 December 2013 a.mn.
+# Version 2.17.5.1, 15 December 2013 a.mn.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -480,7 +480,7 @@ metadata.description=Basic crawl starting with useful defaults
 
 # URLS HERE
 
-"""+cgi.escape("\n".join(wikis),True)+"""
+"""+cgi.escape("\n".join(wikis),True).encode("ascii", "xmlcharrefreplace")+"""
 
     </prop>
    </props>
