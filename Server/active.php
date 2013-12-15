@@ -1072,7 +1072,10 @@ function get_url($url)
     $ret = curl_exec($crl);
     $error_no = curl_errno($crl);
     curl_close($crl);
-    print $error_no;
+    if($error_no==0){
+        echo '';}
+    else {
+    echo $error_no;}
     return $ret;
 }
 function get_domain($url)
@@ -1287,7 +1290,7 @@ function arcmaj3_handler()
             //         $ulFailed   = file_get_contents($_FILES['failedUrlData']['tmp_name']);
             $BarrelUrlListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.lst';
             $uBarrelData      = get_url($BarrelUrlListLoc);
-            echo $uBarrelData;
+            #echo $uBarrelData;
             #echo $uBarrelData;
             echo "\n\n" . 'List data URL: ' . $BarrelUrlListLoc;
             $BarrelFailedListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'failed.lst';
@@ -1331,11 +1334,12 @@ function arcmaj3_handler()
                         $testProjects     = True;
                         #$potentialProject = $ppid['id'];
                         $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
-                        $potentialProject = $potentialProject['id'];
+                        $potentialProject = $potentialProjectA['id'];
                     }
                 }
                 #$potentialProject = get_domain_simple($value);
-                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
+                #$projects  = $db->getRow('am_projects', 'id', $potentialProject);
+                $projects  = $potentialProjectA;
                 $projectId = $projects['id'];
                 #$projectId=1;
                 if ($testProjects) {
@@ -1364,12 +1368,13 @@ function arcmaj3_handler()
                     if (stripos($value, $ppid['urlPattern']) !== false) {
                         $testProjects     = True;
                         $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
-                        $potentialProject = $potentialProject['id'];
+                        $potentialProject = $potentialProjectA['id'];
                     }
                 }
                 #$potentialProject = get_domain_simple($value);
-                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
-                $projectId = $projects['id'];
+#                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
+                 $projects  = $potentialProjectA;
+               $projectId = $projects['id'];
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 $failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
                 $failedRowId       = $failedRowIdRecord['id'];
