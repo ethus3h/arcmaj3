@@ -658,7 +658,8 @@ class FractureDB
         //echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
-        $this->db = new Database('mysql:host=localhost;dbname=' . "futuqiur_" . $this->name . ';charset=utf8', "futuqiur_" . $username, $password);
+        $host = $db_data[$this->name][2];
+        $this->db = new Database('mysql:host='.$host.';dbname=' . "futuqiur_" . $this->name . ';charset=utf8', $username, $password);
         $dbh      = $this->db;
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $dbh->beginTransaction();
@@ -1211,7 +1212,7 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
 function arcmaj3_barrel_expire($barrelId)
 {
     echo 'Expiring barrel ' . $barrelId . '...<br>' . "\n";
-    $db = new FractureDB('arcmaj3');
+    $db = new FractureDB('futuqiur_arcmaj3');
     $db->updateColumn('am_urls', 'barrel', '0', 'barrel', $barrelId);
     $db->setField('am_barrels', 'status', '2', $barrelId);
     echo 'Expired barrel ' . $barrelId . '.<br>' . "\n";
@@ -1219,7 +1220,7 @@ function arcmaj3_barrel_expire($barrelId)
 }
 #INSERT REQUEST RESPONDERS BELOW THIS LINE
 #Arcmaj3
-// $db             = new FractureDB('arcmaj3');
+// $db             = new FractureDB('futuqiur_arcmaj3');
 // $pps              = $db->getColumn('am_projects', 'urlPattern');
 //             $testProjects     = False;
 //             $potentialProject = '';
@@ -1275,7 +1276,7 @@ function arcmaj3_handler()
             print_r($failedData);
             $barrelId       = $barrelData[0];
             $barrelUserName = $barrelData[1];
-            $db             = new FractureDB('arcmaj3');
+            $db             = new FractureDB('futuqiur_arcmaj3');
             $urlsFinished   = $db->getRows('am_urls', 'barrel', $barrelId);
             $urlsFinished   = $urlsFinished[0];
             $barrelSize     = Rq('barrelSize');
@@ -1366,7 +1367,7 @@ function arcmaj3_handler()
                 }
                 #Barrel format 0.1:
                 #ID,0xURL\n            
-                $db          = new FractureDB('arcmaj3');
+                $db          = new FractureDB('futuqiur_arcmaj3');
                 #Make a new barrel.
                 $newBarrelId = $db->addRow('am_barrels', 'status, who, dateAssigned', "'0', '" . Rq('userName') . "', '" . date('Y') . "-" . date('m') . "-" . date('d') . "'");
                 echo $newBarrelId . "\n";
@@ -1396,7 +1397,7 @@ function arcmaj3_handler()
                     arcmaj3_barrel_expire($barrelId);
                 } else {
                     if (Rq('amtask') == 'expireOldBarrels') {
-                        $db         = new FractureDB('arcmaj3');
+                        $db         = new FractureDB('futuqiur_arcmaj3');
                         # from http://stackoverflow.com/questions/17307587/mysql-datetime-evaluation-get-all-records-whose-value-is-before-midnight-of-the
                         $barrelData = $db->query('SELECT id FROM `am_barrels` WHERE status=0 AND dateAssigned < ( DATE(NOW()) - INTERVAL 1 DAY );');
                         # print_r($barrelData);
@@ -1407,7 +1408,7 @@ function arcmaj3_handler()
                         $db->close();
                     } else {
                         if (Rq('amtask') == 'addUrl') {
-                            $db               = new FractureDB('arcmaj3');
+                            $db               = new FractureDB('futuqiur_arcmaj3');
                             $newUrl           = Rq('amNewUrl');
                             $pps              = $db->getColumn('am_projects', 'urlPattern');
                             $testProjects     = False;
@@ -1433,7 +1434,7 @@ function arcmaj3_handler()
                             $db->close();
                         } else {
                             if (Rq('amtask') == 'addProject') {
-                                $db               = new FractureDB('arcmaj3');
+                                $db               = new FractureDB('futuqiur_arcmaj3');
                                 $newUrl           = Rq('amSeedUrl');
                                 $newProject       = Rq('amFilterPattern');
                                 $newProjectId     = $db->addRow('am_projects', 'urlPattern, patternHashUnique', "'" . $db->UrlEscS($newProject) . "', '" . hash('sha512', $db->UrlEscS($newProject)) . "'");
@@ -1489,7 +1490,7 @@ function DBSimpleSubmissionHandler()
 function arcmaj3_wint()
 {
     $main_console = new FluidActive('Arcmaj3 statistics web console');
-    $db           = new FractureDB('arcmaj3');
+    $db           = new FractureDB('futuqiur_arcmaj3');
     #$main_console->DBTextEntry($db, 'am_urls', 'location', 0);
     #$main_console->DBRowEntry($db, 'am_urls', 1);
     #$main_console->DBTableEntry($db, 'am_urls');
