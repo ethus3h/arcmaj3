@@ -1358,7 +1358,7 @@ function arcmaj3_handler()
 
 foreach ($pptb as $pprow){
 
-if(in_array($pprow['urlPattern'])) {
+if(stripos($value, $pprow['urlPattern']) !== false) {
 $potentialProjectA = $pprow;
 }
 
