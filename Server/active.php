@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.7, 15 December 2013 a.mn..
+#Futuramerlin Active Scripting Library. Version 0.86.7.1, 15 December 2013 a.mn..
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -684,7 +684,7 @@ class FractureDB
     }
     function query($query, $failed = False)
     {
-        #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -714,7 +714,7 @@ class FractureDB
     }
     function query_num($query, $failed = False)
     {
-        #echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERY_NUM: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -733,7 +733,7 @@ class FractureDB
     function queryInsert($query)
     {
         global $displayDebugMessages;
-        #echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
+        echo '<br><br><font color="red">EXECUTING QUERYINSERT: ' . $query . '</font><br><br>';
         $dbh = $this->db;
         $this->queryCount++;
         #http://pastebin.com/bbCRpA2m        
@@ -1080,7 +1080,7 @@ function get_domain_simple($url)
 
 function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsToCrawl = '')
 {
-    #echo 'returning barrel';
+   /* #echo 'returning barrel';
     $projects = $db->getColumn_num('am_projects', 'id', 'status', '0');
     $prArrayv = array();
     foreach ($projects as $key => $value) {
@@ -1207,7 +1207,8 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
     #print_r($pInt);
     #$returnBarrel = implode("\n", $pInt);
     #print_r($returnBarrel);
-    $returnBarrel = $barrelRet;
+    $returnBarrel = $barrelRet; */
+    $returnBarrel = 'Test barrel result.';
     return $returnBarrel;
 }
 function arcmaj3_barrel_expire($barrelId)
@@ -1384,6 +1385,7 @@ function arcmaj3_handler()
                 //                 echo $rowToReturn['location'] . "\n";
                 //                 $urlCounter++;
                 //             }
+                echo '<br><br>Page served using ' . $db->queryCount . ' queries.<br><br>';
                 $db->close();
                 // echo "http://drive.google.com/\n";
                 // echo "http://wretch.cc/\n";
