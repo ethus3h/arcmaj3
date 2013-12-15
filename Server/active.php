@@ -659,8 +659,8 @@ class FractureDB
         //echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
-        $host = $db_data[$this->name][2];
-        $this->db = new Database('mysql:host='.$host.';dbname=' . $this->name . ';charset=utf8', $username, $password);
+        $host     = $db_data[$this->name][2];
+        $this->db = new Database('mysql:host=' . $host . ';dbname=' . $this->name . ';charset=utf8', $username, $password);
         $dbh      = $this->db;
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $dbh->beginTransaction();
@@ -843,18 +843,18 @@ class FractureDB
         $rowDataP = $rowData[0];
         return $rowDataP;
     }
-    function getNextRowEF($table, $filterField = '', $filterValue = '', $custom = '',$idFieldName = 'id', $limit = 1)
+    function getNextRowEF($table, $filterField = '', $filterValue = '', $custom = '', $idFieldName = 'id', $limit = 1)
     {
         if ($filterField !== '') {
             $queryInsert = $filterField . ' = \'' . $filterValue . '\' ';
         } else {
             $queryInsert = '';
         }
-//         if ($custom !== '') {
-//             $queryInsert2 = $filterField2 . ' = \'' . $filterValue2 . '\' ';
-//         } else {
-//             $queryInsert2 = '';
-//         }
+        //         if ($custom !== '') {
+        //             $queryInsert2 = $filterField2 . ' = \'' . $filterValue2 . '\' ';
+        //         } else {
+        //             $queryInsert2 = '';
+        //         }
         $query    = 'SELECT * FROM `' . $table . '` WHERE ' . $queryInsert . ' AND ' . $custom . ' LIMIT ' . $limit . ';';
         #echo "\n".$query."\n";
         $rowData  = $this->query($query);
@@ -1055,6 +1055,7 @@ if (!function_exists("gzdecode")) {
 }
 function get_url($url)
 #From http://www.howtogeek.com/howto/programming/php-get-the-contents-of-a-web-page-rss-feed-or-xml-file-into-a-string-variable/ and http://stackoverflow.com/questions/5522636/get-file-content-from-a-url
+    
 # and from http://stackoverflow.com/questions/13988365/what-are-the-possible-reasons-for-curl-error-60-on-an-https-site
 {
     $userAgent = 'Mozilla/4.0 (compatible; MSIE 6.0; Windows NT 5.1; .NET CLR 1.1.4322)';
@@ -1069,13 +1070,14 @@ function get_url($url)
     curl_setopt($crl, CURLOPT_FOLLOWLOCATION, true);
     curl_setopt($crl, CURLOPT_CONNECTTIMEOUT, $timeout);
     #print_r($crl);
-    $ret = curl_exec($crl);
+    $ret      = curl_exec($crl);
     $error_no = curl_errno($crl);
     curl_close($crl);
-    if($error_no==0){
-        echo '';}
-    else {
-    echo $error_no;}
+    if ($error_no == 0) {
+        echo '';
+    } else {
+        echo $error_no;
+    }
     return $ret;
 }
 function get_domain($url)
@@ -1160,10 +1162,10 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
     #echo "\n\nENTERING DEBUG SECTION\n\n";
     #print_r($pInt);
     $urlCounter = 0;
-//     echo 'Urls per bucket: '. $urlsPerBucket . ".\n";
+    //     echo 'Urls per bucket: '. $urlsPerBucket . ".\n";
     while ($urlCounter < $urlsPerBucket) {
-//         echo 'Entered URL choice loop';
-//         echo $urlCounter . "\n";
+        //         echo 'Entered URL choice loop';
+        //         echo $urlCounter . "\n";
         $randomChoice = array_rand($pInt);
         #echo $randomChoice . "\n";
         #echo '$randomChoice=';print_r($randomChoice);echo '.';
@@ -1174,17 +1176,17 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
             $randomP = $randomPA[0];
         } else {
             $randomP = $randomPA;
-    }
-    #print_r($randomPA);
-    #echo '$randomPA=';print_r($randomPA);echo '.';
-    #echo 'RandomP='.$randomP . ".\n";
-    #$rowToAppend = $db->getNextRow('am_urls', 'project', $randomP);
-    $rowToAppend = $db->getNextRowEF('am_urls', 'project', $randomP, 'barrel = 0');
-    #echo '$rowToAppend=';print_r($rowToAppend);echo '.';
-//         if ($rowToAppend['barrel'] !== '0') {
-//             #do nothing, the URL is already taken
-//             echo '';
-//         } else {
+        }
+        #print_r($randomPA);
+        #echo '$randomPA=';print_r($randomPA);echo '.';
+        #echo 'RandomP='.$randomP . ".\n";
+        #$rowToAppend = $db->getNextRow('am_urls', 'project', $randomP);
+        $rowToAppend = $db->getNextRowEF('am_urls', 'project', $randomP, 'barrel = 0');
+        #echo '$rowToAppend=';print_r($rowToAppend);echo '.';
+        //         if ($rowToAppend['barrel'] !== '0') {
+        //             #do nothing, the URL is already taken
+        //             echo '';
+        //         } else {
         echo '';
         if ($rowToAppend['project'] == '0') {
             #This is a stopgap measure until the # of barrel 0 rows goes down. Remove this block of code then.
@@ -1214,20 +1216,19 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
         #print_r($rowToAppend);
         #The chosen URL has now been updated if necessary. Update the barrel column to reflect its addition to the barrel.
         
-        $UrlNotAppended=False;
+        $UrlNotAppended = False;
         #Next line can be commented out for debugging this function. UNCOMMENT WHEN DONE.
-        if($rowToAppend['id']>1){
-        $db->setField('am_urls', 'barrel', $newBarrelId, $rowToAppend['id']);
-        }
-        else {
-        $UrlNotAppended=True;
+        if ($rowToAppend['id'] > 1) {
+            $db->setField('am_urls', 'barrel', $newBarrelId, $rowToAppend['id']);
+        } else {
+            $UrlNotAppended = True;
         }
         
         
         #$pInt[$randChInd] = $rowToAppend['location'];
         #If the URL is already in the barrel, do nothing. Otherwise, add it to the barrel.
-        if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended===True) {
-        #if (stripos($barrelRet, $rowToAppend['id']) !== false) {
+        if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended === True) {
+            #if (stripos($barrelRet, $rowToAppend['id']) !== false) {
             #do nothing, the URL is already in here
             echo '';
         } else {
@@ -1327,8 +1328,8 @@ function arcmaj3_handler()
             $db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
-            $pptb              = $db->getTable('am_projects');
-#echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
+            $pptb = $db->getTable('am_projects');
+            #echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
                 $testProjects     = False;
@@ -1337,47 +1338,48 @@ function arcmaj3_handler()
                 //print_r($pps);
                 #echo "\n\n<br><br><hr><br><br>Beginning processing url: ".$value.".\n\n<br><br>";
                 #echo '<pre>';
-// foreach ($pps as $ppid) {
-//                     if (stripos($value, $ppid['urlPattern']) !== false) {
-//                         $testProjects     = True;
-//                         #$potentialProject = $ppid['id'];
-//     echo '$ppid=';print_r($ppid);echo '.';
-//     #echo '$pptb=';print_r($pptb);echo '.';
-//                         foreach ($pptb as $value) {
-// if(in_array($ppid['urlPattern'],$value))
-// {
-//                         $potentialProjectA = $value;
-// 
-// }
-// }
-// #                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
-// 
-//                         #$ppAstep1=array_map(in_array)
-//                         $potentialProject = $potentialProjectA['id'];
-//                     }
-//                 }
-
-foreach ($pptb as $pprow){
-
-if(stripos($value, $pprow['urlPattern']) !== false) {
-$potentialProjectA = $pprow;
-$testProjects     = True;
-}
-
-}
-if(isset($potentialProjectA)){
-$potentialProject = $potentialProjectA['id'];}
-
-
-    #echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
-    #echo '$potentialProject=';print_r($potentialProject);echo '.';
+                // foreach ($pps as $ppid) {
+                //                     if (stripos($value, $ppid['urlPattern']) !== false) {
+                //                         $testProjects     = True;
+                //                         #$potentialProject = $ppid['id'];
+                //     echo '$ppid=';print_r($ppid);echo '.';
+                //     #echo '$pptb=';print_r($pptb);echo '.';
+                //                         foreach ($pptb as $value) {
+                // if(in_array($ppid['urlPattern'],$value))
+                // {
+                //                         $potentialProjectA = $value;
+                // 
+                // }
+                // }
+                // #                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+                // 
+                //                         #$ppAstep1=array_map(in_array)
+                //                         $potentialProject = $potentialProjectA['id'];
+                //                     }
+                //                 }
+                
+                foreach ($pptb as $pprow) {
+                    
+                    if (stripos($value, $pprow['urlPattern']) !== false) {
+                        $potentialProjectA = $pprow;
+                        $testProjects      = True;
+                    }
+                    
+                }
+                if (isset($potentialProjectA)) {
+                    $potentialProject = $potentialProjectA['id'];
+                }
+                
+                
+                #echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
+                #echo '$potentialProject=';print_r($potentialProject);echo '.';
                 #echo '</pre>';
-
+                
                 #$potentialProject = get_domain_simple($value);
                 #$projects  = $db->getRow('am_projects', 'id', $potentialProject);
-//                 $projects  = $potentialProjectA;
-//                 $projectId = $projects['id'];
-                $projectId=$potentialProject;
+                //                 $projects  = $potentialProjectA;
+                //                 $projectId = $projects['id'];
+                $projectId = $potentialProject;
                 #$projectId=1;
                 if ($testProjects) {
                     $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
@@ -1388,68 +1390,68 @@ $potentialProject = $potentialProjectA['id'];}
                 //                 echo ', URL ';
                 //                 echo $value;
                 //                 echo "<br>\n";
-
+                
             }
-#echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
+            #echo '<H1>EXITING GENERAL ROW PROCESSING</H1>';
             //             foreach ($urlsFinished as $value) {
             //                 #Set completed to true.
             //                 $db->setField('am_urls', 'completed', 1, $value);
             //             }
-//             $pps              = $db->getColumn('am_projects', 'urlPattern');
+            //             $pps              = $db->getColumn('am_projects', 'urlPattern');
             #$pptb              = $db->getTable('am_projects');
-
-#echo '<H1>ENTERING FAILED ROW PROCESSING</H1>';
+            
+            #echo '<H1>ENTERING FAILED ROW PROCESSING</H1>';
             foreach ($failedData as $value) {
-
+                
                 #TODO: Increment failedAttempts, set completed to false, set barrel to 0
                 #echo "\n\n<br><br><hr><br><br>Beginning working with failed row: ".$value.".\n\n<br><br>";
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
                 //print_r($pps);
-
-foreach ($pptb as $pprow){
-
-if(stripos($value, $pprow['urlPattern']) !== false) {
-$potentialProjectA = $pprow;
-$testProjects     = True;
-}
-
-}
-$potentialProject = $potentialProjectA['id'];
-/*
-                foreach ($pps as $ppid) {
-                    if (stripos($value, $ppid['urlPattern']) !== false) {
-                        $testProjects     = True;
-                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
-                        $potentialProject = $potentialProjectA['id'];
+                
+                foreach ($pptb as $pprow) {
+                    
+                    if (stripos($value, $pprow['urlPattern']) !== false) {
+                        $potentialProjectA = $pprow;
+                        $testProjects      = True;
                     }
+                    
+                }
+                $potentialProject = $potentialProjectA['id'];
+                /*
+                foreach ($pps as $ppid) {
+                if (stripos($value, $ppid['urlPattern']) !== false) {
+                $testProjects     = True;
+                $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+                $potentialProject = $potentialProjectA['id'];
+                }
                 }*/
                 #$potentialProject = get_domain_simple($value);
-#                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
-/*                 $projects  = $potentialProjectA;
-               $projectId = $projects['id'];*/
-                $projectId=$potentialProject;
+                #                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
+                /*                 $projects  = $potentialProjectA;
+                $projectId = $projects['id'];*/
+                $projectId        = $potentialProject;
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 #$failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
-                $failedRowIdRecordA = $db->query("SELECT id, failedAttempts FROM `am_urls` WHERE location = '".$db->UrlEscS($value)."'");
-                $failedRowIdRecord = $failedRowIdRecordA[0];
-                $failedRowId       = $failedRowIdRecord['id'];
+                $failedRowIdRecordA = $db->query("SELECT id, failedAttempts FROM `am_urls` WHERE location = '" . $db->UrlEscS($value) . "'");
+                $failedRowIdRecord  = $failedRowIdRecordA[0];
+                $failedRowId        = $failedRowIdRecord['id'];
                 #echo "\n\n<br><br><hr><br><br>Beginning working with failed row (ID $failedRowId): ".$value.".\n\n<br><br>";
-
+                
                 #echo "\n\nWorking with failed row $value, ID $failedRowId";
-//                 $currentFailed = $db->getField('am_urls', 'failedAttempts', $failedRowId);
-//                 $currentFailed++;
-                $db->query('UPDATE `am_urls` SET failedAttempts = failedAttempts+1, completed=0 WHERE id='.$failedRowId.';');
-//                 $db->setField('am_urls', 'failedAttempts', $currentFailed, $failedRowId);
-//                 $db->setField('am_urls', 'completed', 0, $failedRowId);
+                //                 $currentFailed = $db->getField('am_urls', 'failedAttempts', $failedRowId);
+                //                 $currentFailed++;
+                $db->query('UPDATE `am_urls` SET failedAttempts = failedAttempts+1, completed=0 WHERE id=' . $failedRowId . ';');
+                //                 $db->setField('am_urls', 'failedAttempts', $currentFailed, $failedRowId);
+                //                 $db->setField('am_urls', 'completed', 0, $failedRowId);
                 #Permanently fail URLs that have failed 100 times.
                 if ($failedRowIdRecord['failedAttempts'] < 100) {
                     $db->setField('am_urls', 'barrel', 0, $failedRowId);
                 }
             }
-echo '<H1>EXITING FAILED ROW PROCESSING</H1>';
-
+            echo '<H1>EXITING FAILED ROW PROCESSING</H1>';
+            
             $db->setField('am_barrels', 'status', 1, $barrelId);
             $db->close();
             if (count($barrelData) < 2) {
