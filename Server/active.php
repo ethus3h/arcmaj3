@@ -12,8 +12,8 @@
 #SHOW FULL PROCESSLIST
 include('authData.php');
 //CONFIG
-#error_reporting(E_ALL);
-ini_set("display_errors", 0);
+error_reporting(E_ALL);
+ini_set("display_errors", 1);
 $displayDebugMessages = False;
 //IMPORTANT VARIABLES
 if ($_SERVER["HTTP_HOST"] == '127.0.0.1') {
@@ -655,11 +655,12 @@ class FractureDB
         
         $this->queryCount = 0;
         global $db_data;
+        #print_r($db_data);
         //echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
         $host = $db_data[$this->name][2];
-        $this->db = new Database('mysql:host='.$host.';dbname=' . "futuqiur_" . $this->name . ';charset=utf8', $username, $password);
+        $this->db = new Database('mysql:host='.$host.';dbname=' . $this->name . ';charset=utf8', $username, $password);
         $dbh      = $this->db;
         $dbh->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
         $dbh->beginTransaction();
@@ -1228,7 +1229,7 @@ function arcmaj3_barrel_expire($barrelId)
 function wordlist_handler()
 {
     $dataValue = Rq('wordToCheck');
-    $db        = new FractureDB('wordlist');
+    $db        = new FractureDB('futuqiur_wordlist');
     $data      = $db->getRows('words', 'word', $dataValue);
     $db->close();
     #print_r($data);
