@@ -1318,9 +1318,10 @@ function arcmaj3_handler()
             #Set status to 1. Set who to $barrelUserName.
             $db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
+            $pps              = $db->getColumn('am_projects', 'urlPattern');
+            $pptb              = $db->getTable('am_projects');
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
-                $pps              = $db->getColumn('am_projects', 'urlPattern');
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
@@ -1328,11 +1329,13 @@ function arcmaj3_handler()
                 foreach ($pps as $ppid) {
                     if (stripos($value, $ppid['urlPattern']) !== false) {
                         $testProjects     = True;
-                        $potentialProject = $ppid['urlPattern'];
+                        #$potentialProject = $ppid['id'];
+                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+                        $potentialProject = $potentialProject['id'];
                     }
                 }
                 #$potentialProject = get_domain_simple($value);
-                $projects  = $db->getRow('am_projects', 'urlPattern', $potentialProject);
+                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
                 $projectId = $projects['id'];
                 #$projectId=1;
                 if ($testProjects) {
@@ -1349,9 +1352,10 @@ function arcmaj3_handler()
             //                 #Set completed to true.
             //                 $db->setField('am_urls', 'completed', 1, $value);
             //             }
+            $pps              = $db->getColumn('am_projects', 'urlPattern');
+            $pptb              = $db->getTable('am_projects');
             foreach ($failedData as $value) {
                 #TODO: Increment failedAttempts, set completed to false, set barrel to 0
-                $pps              = $db->getColumn('am_projects', 'urlPattern');
                 $testProjects     = False;
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
@@ -1359,11 +1363,12 @@ function arcmaj3_handler()
                 foreach ($pps as $ppid) {
                     if (stripos($value, $ppid['urlPattern']) !== false) {
                         $testProjects     = True;
-                        $potentialProject = $ppid['urlPattern'];
+                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+                        $potentialProject = $potentialProject['id'];
                     }
                 }
                 #$potentialProject = get_domain_simple($value);
-                $projects  = $db->getRow('am_projects', 'urlPattern', $potentialProject);
+                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
                 $projectId = $projects['id'];
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 $failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
