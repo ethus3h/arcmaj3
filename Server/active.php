@@ -1275,6 +1275,9 @@ function wordlist_handler()
         echo '0';
     }
 }
+// function array_deep_search($array,$needle){
+// $step1=array_map(in_array())
+// }
 function arcmaj3_handler()
 {
     #verd: Arcmaj3 protocol version ID
@@ -1308,10 +1311,12 @@ function arcmaj3_handler()
             $ulBarrel   = str_replace("\r", "\n", $ulBarrel);
             $ulFailed   = str_replace("\r", "\n", $ulFailed);
             $barrelData = explode("\n", $ulBarrel);
+            echo '<pre>';
             print_r($barrelData);
             echo "\n\n";
             $failedData = explode("\n", $ulFailed);
             print_r($failedData);
+            echo '</pre>';
             $barrelId       = $barrelData[0];
             $barrelUserName = $barrelData[1];
             $db             = new FractureDB('futuqiur_arcmaj3');
@@ -1329,18 +1334,36 @@ function arcmaj3_handler()
                 $potentialProject = '';
                 //$pp=fuzzyMatchGetRow('am_projects','projectId','urlPattern','',$limit='')['projectId'];
                 //print_r($pps);
-                foreach ($pps as $ppid) {
+                echo "\n\n<br><br><hr><br><br>Beginning processing url: ".$value.".\n\n<br><br>";
+                echo '<pre>';
+foreach ($pps as $ppid) {
                     if (stripos($value, $ppid['urlPattern']) !== false) {
                         $testProjects     = True;
                         #$potentialProject = $ppid['id'];
-                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+    echo '$ppid=';print_r($ppid);echo '.';
+    #echo '$pptb=';print_r($pptb);echo '.';
+                        foreach ($pptb as $value) {
+if(in_array($ppid['urlPattern'],$value))
+{
+                        $potentialProjectA = $value;
+
+}
+}
+#                        $potentialProjectA = array_search($ppid['urlPattern'],$pptb);
+
+                        #$ppAstep1=array_map(in_array)
                         $potentialProject = $potentialProjectA['id'];
                     }
                 }
+    echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
+    echo '$potentialProject=';print_r($potentialProject);echo '.';
+                echo '</pre>';
+
                 #$potentialProject = get_domain_simple($value);
                 #$projects  = $db->getRow('am_projects', 'id', $potentialProject);
-                $projects  = $potentialProjectA;
-                $projectId = $projects['id'];
+//                 $projects  = $potentialProjectA;
+//                 $projectId = $projects['id'];
+                $projectId=$potentialProject;
                 #$projectId=1;
                 if ($testProjects) {
                     $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
@@ -1373,8 +1396,9 @@ function arcmaj3_handler()
                 }
                 #$potentialProject = get_domain_simple($value);
 #                $projects  = $db->getRow('am_projects', 'id', $potentialProject);
-                 $projects  = $potentialProjectA;
-               $projectId = $projects['id'];
+/*                 $projects  = $potentialProjectA;
+               $projectId = $projects['id'];*/
+                $projectId=$potentialProject;
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 $failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
                 $failedRowId       = $failedRowIdRecord['id'];
