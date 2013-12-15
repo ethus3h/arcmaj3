@@ -1365,7 +1365,8 @@ $testProjects     = True;
 }
 
 }
-$potentialProject = $potentialProjectA['id'];
+if(isset($potentialProjectA)){
+$potentialProject = $potentialProjectA['id'];}
 
 
     #echo '$potentialProjectA=';print_r($potentialProjectA);echo '.';
@@ -1431,7 +1432,8 @@ $potentialProject = $potentialProjectA['id'];
                 $projectId=$potentialProject;
                 $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
                 #$failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
-                $failedRowIdRecord = $db->query("SELECT id, failedAttempts FROM `am_urls` WHERE location = '".$db->UrlEscS($value)."'")[0];
+                $failedRowIdRecordA = $db->query("SELECT id, failedAttempts FROM `am_urls` WHERE location = '".$db->UrlEscS($value)."'");
+                $failedRowIdRecord = $failedRowIdRecordA[0];
                 $failedRowId       = $failedRowIdRecord['id'];
                 #echo "\n\n<br><br><hr><br><br>Beginning working with failed row (ID $failedRowId): ".$value.".\n\n<br><br>";
 
