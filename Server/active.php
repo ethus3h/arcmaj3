@@ -1217,7 +1217,8 @@ function arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket = 1, $projectsT
         
         #$pInt[$randChInd] = $rowToAppend['location'];
         #If the URL is already in the barrel, do nothing. Otherwise, add it to the barrel.
-        if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended) {
+        #if ((stripos($barrelRet, $rowToAppend['id']) !== false) | $UrlNotAppended===True) {
+        if (stripos($barrelRet, $rowToAppend['id']) !== false) {
             #do nothing, the URL is already in here
             echo '';
         } else {
