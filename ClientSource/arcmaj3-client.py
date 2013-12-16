@@ -24,15 +24,14 @@
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
-# TODO: retain link depth data. Only crawl for a set number of hops?
-# TODO: [underway] critical: create a bucket timeout system
-# TODO: create an easy way to add projects (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
-# TODO: create an easy way to add URLs (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
 # TODO: user statistics tracker
+# TODO: [difficult] retain link depth data. Only crawl for a set number of hops?
+# TODO: [difficult] Store hash of downloaded URLs' contents in database for future duplicate checking.
 # TODO: bug - upload may (partly) fail if two (small) files are sent to s3 without pause http://p.defau.lt/?puN_G_zKXbv1lz9TfSliPg http://archive.org/details/wiki-editionorg_w or something http://p.defau.lt/?udwrG7YQn4RK_1whl1XWRw http://archive.org/details/wiki-jutedreamhosterscom_lineageii_bestiary
 # TODO: minor bug - don't overwrite existing files with same filename in the same identifier
 # TODO: fix the addFinished log duplicate issue
-# TODO: prevent download duplication — difficult
+# [As much done as presently practical]: prevent download duplication — difficult
+# [Pretty much done, but not fully automated]: [underway] critical: create a bucket timeout system
 # [Done, I think] critical: restrict database submissions to current projects
 # [Done, I think]: client protocol version indicator
 # [Done, I think]: Make sure quotation marks are handled correctly by FractureDB
@@ -48,6 +47,8 @@
 # [Done]: auto updater for appliance
 # [Done]: install curl in appliance
 # [Done]: record megawarc filesizes in barrels table
+# [Done]: create an easy way to add projects (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
+# [Done]: create an easy way to add URLs (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
 
 # Configuration goes here
 # The optional fourth line of the config file is a comma-separated list of project IDs to crawl.
