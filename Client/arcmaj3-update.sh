@@ -1,22 +1,23 @@
 #!/bin/bash
 
+rm -rf ./amc;
 mkdir amc;
 cd amc;
 mkdir clean;
 cd clean;
-wget http://arcmaj3.googlecode.com/svn/trunk/ClientSource.tar.gz;
+wget -O ClientSource.tar.gz http://futuramerlin.com/piter.php?r=1;
 tar -xzvf ClientSource.tar.gz;
 rm ClientSource.tar.gz;
 cd ..;
-rm -rf ./amI1
-rm -rf ./amI2
-rm -rf ./amI3
-rm -rf ./amI4
+rm -rf ./amI1;
+rm -rf ./amI2;
+rm -rf ./amI3;
+rm -rf ./amI4;
 cp -r clean/ClientSource amI1;
 cp -r clean/ClientSource amI2;
 cp -r clean/ClientSource amI3;
 cp -r clean/ClientSource amI4;
-rm -rf ./clean
+rm -rf ./clean;
 cp ../config.txt ./amI1/;
 cp ../config.txt ./amI2/;
 cp ../config.txt ./amI3/;
