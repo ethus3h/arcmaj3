@@ -24,7 +24,6 @@
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
-# TODO: Retain origin barrel data for URLs table
 # TODO: user statistics tracker
 # TODO: (?) calculate SHA-512 hashes client-side to reduce DB server load (this would calculate hashes even if the URL was already in the database, though…)
 # TODO: [difficult] retain link depth data. Only crawl for a set number of hops?
@@ -44,6 +43,7 @@
 # [Done, I think]: Fix active.php so that a duplicate entry doesn't rollback the entire set of URLs.
 # [Done, I think]: Zip megawarc tar
 # [Done, I think]: remove duplicate out/failed URLs client-side to reduce DB server load
+# [Done, I think]: Retain origin barrel data for URLs table
 # [Done] critical: retry failed URLs
 # [Done] necessary for final release: config file with username & api keys; include example
 # [Done] Project statistics tracker
