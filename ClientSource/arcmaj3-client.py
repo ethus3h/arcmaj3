@@ -1142,7 +1142,7 @@ metadata.description=Basic crawl starting with useful defaults
         pageLSplit2.append(entry[25:]+"\n")
     pageLinks4=''.join(pageLSplit2)
     #pageLinks4=re.sub("^.{25}",'',pageLinks3)
-    pageLinks5=barrelID+'\n'+userName+'\n'+pageLinks2+pageLinks4+'\n'
+    pageLinks5=pageLinks2+pageLinks4+'\n'
     log_add('\n\nEXTRACTED LINKS FROM DATA. Link results: \n\n' + pageLinks5 + '\n\n')
     #linkGz = StringIO.StringIO()
     #gzip_file = gzip.GzipFile(fileobj=linkGz, mode='w')
@@ -1227,7 +1227,7 @@ metadata.description=Basic crawl starting with useful defaults
     pageLinksDHerFinala=pageLinks5+"\n"+her_ext_url_data
     plFinList=pageLinksDHerFinala.split('\n')
     plFinListD=list(set(plFinList))
-    pageLinksDHerFinal="\n".join(plFinListD)
+    pageLinksDHerFinal=barrelID+'\n'+userName+'\n'+"\n".join(plFinListD)
     outlink_count = len(plFinListD)
     linkGz = StringIO.StringIO()
     gzip_file = gzip.GzipFile(fileobj=linkGz, mode='w')
