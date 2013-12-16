@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.8, 15 December 2013.
+#Futuramerlin Active Scripting Library. Version 0.86.9, 16 December 2013.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -1382,7 +1382,7 @@ function arcmaj3_handler()
                 $projectId = $potentialProject;
                 #$projectId=1;
                 if ($testProjects) {
-                    $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
+                    $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "';");
                 }
                 //                 echo "<br>\n";
                 //                 echo 'Added/updated row ';
@@ -1432,7 +1432,7 @@ function arcmaj3_handler()
                 /*                 $projects  = $potentialProjectA;
                 $projectId = $projects['id'];*/
                 $projectId        = $potentialProject;
-                $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "'");
+                $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "'");
                 #$failedRowIdRecord = $db->getRow('am_urls', 'location', $db->UrlEscS($value));
                 $failedRowIdRecordA = $db->query("SELECT id, failedAttempts FROM `am_urls` WHERE location = '" . $db->UrlEscS($value) . "'");
                 $failedRowIdRecord  = $failedRowIdRecordA[0];
