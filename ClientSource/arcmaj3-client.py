@@ -284,7 +284,7 @@ def upload(wikis):
         if dirname == '.':
             for f in filenames:
                 #log_add('Filenames: ' + str(f))
-                if f.endswith('.7z') or f == 'URLs.lst' or f == 'failed.lst' or f.startswith('bucketsCompleted-') or f.startswith('barrelsCompleted-') or f.startswith('log-') or f.startswith('AMJ_BarrelData_') or f.startswith('AMJ_BucketData_') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz'))):
+                if f.endswith('.xz') orf.endswith('.7z') or f == 'URLs.lst' or f == 'failed.lst' or f.startswith('bucketsCompleted-') or f.startswith('barrelsCompleted-') or f.startswith('log-') or f.startswith('AMJ_BarrelData_') or f.startswith('AMJ_BucketData_') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz'))):
                     dumps.append(f)
                 #if timeRunning in f or timeRemote in f:
                     #dumps.append(f)
@@ -387,7 +387,7 @@ def concatW():
     ulog_add("# CONCATENATING RECORDS")
     ulog_add("#"*73)
     errored = False
-    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z upload-* bucketsCompleted-* barrelsCompleted-* log-* URLs.lst failed.lst *.megawarc.tar *.megawarc.json.gz;\';')
+    cctRes=run('bash -c \'./megawarc pack AMJ_BarrelData_'+barrelID+'_' + uuidG+' *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* URLs.lst failed.lst *.megawarc.tar *.megawarc.json.gz;\';')
     ulog_add("\n\n"+cctRes[0]+"\n\n")
     ulog_add("\n--\n"+"#"*73)
     ulog_add("# DONE CONCATENATING RECORDS")
