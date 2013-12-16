@@ -147,7 +147,7 @@ UserAgentChoice=fake.user_agent()
 #from http://stackoverflow.com/questions/35817/how-to-escape-os-system-calls-in-python
 def shellesc(s):
     #.replace('&','\\&')
-    return s.replace("'", "%27").replace(' ','%20').replace('<','%3C').replace('>','%3E').replace('[','%5B').replace(']','%5D').replace('(','%28').replace(')','%29')
+    return s.replace("'", "%27").replace(' ','%20').replace('<','%3C').replace('>','%3E').replace('[','%5B').replace(']','%5D').replace('(','%28').replace(')','%29').replace(';','%3B').replace("\x00",'%00').replace("\x0c",'%0C').replace("\x0b",'%0B').replace("\x08",'%08').replace("\x03",'%03')
 
 #from https://gist.github.com/edufelipe/1027906
 
