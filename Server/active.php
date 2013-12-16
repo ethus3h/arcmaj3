@@ -1325,7 +1325,7 @@ function arcmaj3_handler()
             $urlsFinished   = $urlsFinished[0];
             $barrelSize     = Rq('barrelSize');
             #Set status to 1. Set who to $barrelUserName.
-            $db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
+            #$db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb = $db->getTable('am_projects');
@@ -1382,7 +1382,7 @@ function arcmaj3_handler()
                 $projectId = $potentialProject;
                 #$projectId=1;
                 if ($testProjects) {
-                    $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "';");
+                    $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "'");
                 }
                 //                 echo "<br>\n";
                 //                 echo 'Added/updated row ';
