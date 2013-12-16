@@ -284,7 +284,7 @@ def upload(wikis):
         if dirname == '.':
             for f in filenames:
                 #log_add('Filenames: ' + str(f))
-                if f.endswith('.xz') orf.endswith('.7z') or f == 'URLs.lst' or f == 'failed.lst' or f.startswith('bucketsCompleted-') or f.startswith('barrelsCompleted-') or f.startswith('log-') or f.startswith('AMJ_BarrelData_') or f.startswith('AMJ_BucketData_') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz'))):
+                if f.endswith('.xz') or f.endswith('.7z') or f == 'URLs.lst' or f == 'failed.lst' or f.startswith('bucketsCompleted-') or f.startswith('barrelsCompleted-') or f.startswith('log-') or f.startswith('AMJ_BarrelData_') or f.startswith('AMJ_BucketData_') or f.endswith('.warc.gz') or ('megawarc' in f and (f.endswith('.tar') or f.endswith('.json.gz') or f.endswith('.warc.gz'))):
                     dumps.append(f)
                 #if timeRunning in f or timeRemote in f:
                     #dumps.append(f)
