@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.5.3, 16 December 2013 a.mn..
+# Version 2.17.6, 16 December 2013.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -24,7 +24,7 @@
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
-# TODO: remove duplicate out/failed URLs client-side to reduce DB server load
+# TODO: Retain origin barrel data for URLs table
 # TODO: user statistics tracker
 # TODO: (?) calculate SHA-512 hashes client-side to reduce DB server load (this would calculate hashes even if the URL was already in the database, though…)
 # TODO: [difficult] retain link depth data. Only crawl for a set number of hops?
@@ -42,6 +42,8 @@
 # [Done, I think]: Upload will not be marked as an error uploading bucket if the error is, for example, incorrect authorization keys — cURL always returns success if it sends the request, as far as I can tell. Maybe check its returned data for any XML content?
 # [Done, I think]: Make sure odd urls are getting recorded in the database correctly. (e. g. URLs containing ' and such)
 # [Done, I think]: Fix active.php so that a duplicate entry doesn't rollback the entire set of URLs.
+# [Done, I think]: Zip megawarc tar
+# [Done, I think]: remove duplicate out/failed URLs client-side to reduce DB server load
 # [Done] critical: retry failed URLs
 # [Done] necessary for final release: config file with username & api keys; include example
 # [Done] Project statistics tracker
@@ -406,6 +408,9 @@ def concatW():
             ulog_add("\n\nAppend finished\n\n")
     else:
         log_add('ERROR CONCATENATING RECORDS. THIS IS NOT GOOD.')
+    ulog_add('\n\nCompressing records…\n\n')
+    ulog_add(run('7z a -ai AMJ_BarrelData_'+barrelID+'_' + uuidG+'.megawarc.tar')[0])
+    ulog_add('\n\nFinished compressing records…\n\n')
     errored = False
     return cctRes[0]
 log_add('\nPreparing main function\n')
@@ -1173,8 +1178,9 @@ metadata.description=Basic crawl starting with useful defaults
         #print 'Record: ' + erecord
         if '200 OK' not in erecord:
             failedUrlsList.append(erecordu+"\n")
-    failedUrls=''.join(failedUrlsList)
-    failedUrl_count=len(failedUrlsList)
+    failedUrlsListu=list(set(failedUrlsList))
+    failedUrls=''.join(failedUrlsListu)
+    failedUrl_count=len(failedUrlsListu)
     failedGz = StringIO.StringIO()
     gzip_file = gzip.GzipFile(fileobj=failedGz, mode='w')
     gzip_file.write(failedUrls)
@@ -1218,8 +1224,11 @@ metadata.description=Basic crawl starting with useful defaults
     #f = open('URLs.lst', 'r')
     #f.write("\n"+her_ext_url_data+"\n")
     #f.close()
-    pageLinksDHerFinal=pageLinks5+"\n"+her_ext_url_data
-    outlink_count = len(pageLinksDHerFinal.split('\n'))
+    pageLinksDHerFinala=pageLinks5+"\n"+her_ext_url_data
+    plFinList=pageLinksDHerFinala.split('\n')
+    plFinListD=list(set(plFinList))
+    pageLinksDHerFinal="\n".join(plFinListD)
+    outlink_count = len(plFinListD)
     linkGz = StringIO.StringIO()
     gzip_file = gzip.GzipFile(fileobj=linkGz, mode='w')
     gzip_file.write(pageLinksDHerFinal)
