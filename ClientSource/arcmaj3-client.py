@@ -1099,10 +1099,11 @@ metadata.description=Basic crawl starting with useful defaults
             jobFinished=True
         else:
             time.sleep(5)
+            rubles=run('tail h3/heritrix-3.1.1/jobs/AMJ_BarrelData_'+barrelID+'_' + uuidG + '/job.log')
+            hlog_add(rubles)
+            print rubles
             hlog_add('Heritrix not finished')
             print 'Heritrix not finished'
-            rubles=run('tail h3/heritrix-3.1.1/jobs/AMJ_BarrelData_'+barrelID+'_' + uuidG + '/job.log')
-            print rubles
             run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
             run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
             time.sleep(0.5)
