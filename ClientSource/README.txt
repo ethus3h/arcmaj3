@@ -52,3 +52,5 @@ Dependencies
 * wget 1.14
 * python 2.6
 * fake-factory https://github.com/joke2k/faker
+* 7z
+* xz

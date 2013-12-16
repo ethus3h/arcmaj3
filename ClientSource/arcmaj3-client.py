@@ -409,7 +409,7 @@ def concatW():
     else:
         log_add('ERROR CONCATENATING RECORDS. THIS IS NOT GOOD.')
     ulog_add('\n\nCompressing records…\n\n')
-    ulog_add(run('7z a -ai AMJ_BarrelData_'+barrelID+'_' + uuidG+'.megawarc.tar')[0])
+    ulog_add(run('xz AMJ_BarrelData_'+barrelID+'_' + uuidG+'.megawarc.tar')[0])
     ulog_add('\n\nFinished compressing records…\n\n')
     errored = False
     return cctRes[0]
