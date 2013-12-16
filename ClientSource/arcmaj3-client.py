@@ -1099,7 +1099,7 @@ metadata.description=Basic crawl starting with useful defaults
             jobFinished=True
         else:
             time.sleep(5)
-            rubles=run('tail h3/heritrix-3.1.1/jobs/AMJ_BarrelData_'+barrelID+'_' + uuidG + '/job.log')
+            rubles=run('tail -n 2 h3/heritrix-3.1.1/jobs/AMJ_BarrelData_'+barrelID+'_' + uuidG + '/job.log')[0]
             hlog_add(rubles)
             print rubles
             hlog_add('Heritrix not finished')
