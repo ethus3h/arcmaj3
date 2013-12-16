@@ -1233,7 +1233,7 @@ metadata.description=Basic crawl starting with useful defaults
     time.sleep(30)
     postdata='handler=1&handlerNeeded=arcmaj3&amtask=up'+'&barrelSize='+str(int(barrelSize))+''+'&verd='+verd+'&amloc='+'AMJ_BarrelData_'+barrelID+'_' + uuidG +'.' +timeRunning
     ulog_add("\n\nPOST data sent to http://130.111.242.99/d/r/active.php: \n\n"+postdata+"\n\n(Barrel ID: "+barrelID+")\n\n")
-    ulog_add("\n\nWaiting for reply from server for barrel " + str(barrelID) + ": " + str(outlink_count) + " outlinks; " + failedUrl_count + " failed URLs\n\n")
+    ulog_add("\n\nWaiting for reply from server for barrel " + str(barrelID) + ": " + str(outlink_count) + " outlinks; " + str(failedUrl_count) + " failed URLs\n\n")
     req = urllib2.Request('http://130.111.242.99/d/r/active.php', postdata)
     req.add_header('User-agent',UserAgentChoice)
     fp = urllib2.urlopen(req)
