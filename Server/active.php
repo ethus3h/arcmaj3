@@ -1325,7 +1325,7 @@ function arcmaj3_handler()
             $urlsFinished   = $urlsFinished[0];
             $barrelSize     = Rq('barrelSize');
             #Set status to 1. Set who to $barrelUserName.
-            #$db->setField('am_barrels', 'who', $barrelUserName, $barrelId);
+            $db->setField('am_barrels', 'ia_identifier', Rq('amloc'), $barrelId);
             $db->setField('am_barrels', 'size', $barrelSize, $barrelId);
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb = $db->getTable('am_projects');
