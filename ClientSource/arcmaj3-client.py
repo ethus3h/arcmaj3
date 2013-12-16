@@ -1099,16 +1099,17 @@ metadata.description=Basic crawl starting with useful defaults
             print 'Heritrix finished'
             jobFinished=True
         else:
-            time.sleep(5)
+            time.sleep(15)
             rubles=run('tail -n 2 h3/heritrix-3.1.1/jobs/AMJ_BarrelData_'+barrelID+'_' + uuidG + '/job.log')[0]
             hlog_add(rubles)
             print rubles
             hlog_add('Heritrix not finished')
             print 'Heritrix not finished'
-            run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
-            run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
+            run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)
+            run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
+            run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
             time.sleep(0.5)
-            run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0]
+            run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
     hlog_add(run('curl -v -d "action=teardown" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mv h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+' .')
