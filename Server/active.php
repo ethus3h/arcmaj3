@@ -682,6 +682,18 @@ class FractureDB
         $dbh = $this->db;
         $dbh->commit();
     }
+    function SaveState()
+    {
+        $dbh    = $this->db;
+        $result = $dbh->prepare('SAVEPOINT databaseState');
+        $result->execute();
+    }
+    function restoreSave()
+    {
+        $dbh    = $this->db;
+        $result = $dbh->prepare('ROLLBACK TO SAVEPOINT databaseState');
+        $result->execute();
+    }
     function query($query, $failed = False)
     {
         #echo '<br><br><font color="red">EXECUTING QUERY: ' . $query . '</font><br><br>';
@@ -903,10 +915,26 @@ class FractureDB
     }
     function addRowFuzzy($table, $fields, $values)
     {
-        $query    = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $values . ') ON DUPLICATE KEY UPDATE id=id;';
+        $query = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $values . ');';
         #$query    = 'INSERT INTO ' . $table . ' (' . $fields . ') VALUES (' . $values . ');';
         #echo '<br><br><font color="red">EXECUTING addRowfuzzy QUERY: ' . $query . '</font><br><br>';
-        $newRowId = $this->queryInsert($query);
+        try {
+            $newRowId = $this->queryInsert($query);
+        }
+        catch (PDOException $e) {
+            #condition from http://stackoverflow.com/questions/4366730/how-to-check-if-a-string-contains-specific-words
+            if (strpos($e->getMessage, 'Duplicate entry') !== False) {
+                #Do nothing; this is a normal condition
+            }
+            
+            else {
+                #Something went wrong
+                # from http://www.php.net/manual/en/class.pdoexception.php#95812
+                throw new Exception($e->getMessage(), $e->getCode());
+                #from http://stackoverflow.com/questions/15887070/php-trigger-fatal-error
+                trigger_error("Fatal error inserting URL", E_USER_ERROR);
+            }
+        }
         return $newRowId;
     }
     function updateColumn($table, $field, $value, $filterField = 'id', $filterValue = '')
@@ -1382,7 +1410,11 @@ function arcmaj3_handler()
                 $projectId = $potentialProject;
                 #$projectId=1;
                 if ($testProjects) {
+                    $db->SaveState();
+                    
                     $newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "'");
+                    
+                    
                 }
                 //                 echo "<br>\n";
                 //                 echo 'Added/updated row ';
