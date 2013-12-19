@@ -27,6 +27,7 @@
 # TODO: user statistics tracker
 # TODO: Allow barrels to come in after they've been expired?
 # TODO: Use ww2.futuramerlin.com?
+# TODO: ACTUALLY use PDO prepared statements to reduce the risk of (intentional or accidental) SQL injection.
 # TODO: (?) calculate SHA-512 hashes client-side to reduce DB server load (this would calculate hashes even if the URL was already in the database, though…)
 # TODO: [difficult] retain link depth data. Only crawl for a set number of hops?
 # TODO: [difficult] Store hash of downloaded URLs' contents in database for future duplicate checking.
