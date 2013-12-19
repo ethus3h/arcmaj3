@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.9, 16 December 2013.
+#Futuramerlin Active Scripting Library. Version 0.86.10, 19 December 2013.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -1479,7 +1479,7 @@ function arcmaj3_handler()
                 #ID,0xURL\n            
                 $db          = new FractureDB('futuqiur_arcmaj3');
                 #Make a new barrel.
-                $newBarrelId = $db->addRow('am_barrels', 'status, who, dateAssigned', "'0', '" . Rq('userName') . "', '" . date('Y') . "-" . date('m') . "-" . date('d') . "'");
+                $newBarrelId = $db->addRow('am_barrels', 'status, who, dateAssigned, barrelCount', "'0', '" . Rq('userName') . "', '" . date('Y') . "-" . date('m') . "-" . date('d') . "', '" . $urlsPerBucket . "'");
                 echo $newBarrelId . "\n";
                 $projCrawlRq = Rq('projectsToCrawl');
                 $barrel      = arcmaj3_return_barrel($db, $newBarrelId, $urlsPerBucket, $projCrawlRq);
