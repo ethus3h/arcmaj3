@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.6, 16 December 2013.
+# Version 2.17.7, 19 December 2013.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -25,6 +25,8 @@
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
 # TODO: user statistics tracker
+# TODO: Allow barrels to come in after they've been expired?
+# TODO: Use ww2.futuramerlin.com?
 # TODO: (?) calculate SHA-512 hashes client-side to reduce DB server load (this would calculate hashes even if the URL was already in the database, though…)
 # TODO: [difficult] retain link depth data. Only crawl for a set number of hops?
 # TODO: [difficult] Store hash of downloaded URLs' contents in database for future duplicate checking.
@@ -44,6 +46,7 @@
 # [Done, I think]: Zip megawarc tar
 # [Done, I think]: remove duplicate out/failed URLs client-side to reduce DB server load
 # [Done, I think]: Retain origin barrel data for URLs table
+# [Done, I think]: Gracefully handle a failure to get a barrel because the server's down
 # [Done] critical: retry failed URLs
 # [Done] necessary for final release: config file with username & api keys; include example
 # [Done] Project statistics tracker
@@ -217,7 +220,14 @@ def hlog_add(text):
 #vamp='bash -c \'wget -O barrelData.txt "http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\''
 #barrelFetchResult = check_output(vamp, stderr=subprocess.STDOUT, shell=True)
 barrelID='NoBarrel'
+errored=False
 barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://130.111.242.99/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
+if errored == True:
+    log_add('Failed to retrieve barrel data. Sleeping 60 seconds…')
+    time.sleep(60)
+    log_add('…and quitting.')
+    sys.exit()
+errored=False
 barrelFetchResult=barrelFetchResult[0]
 listfile = 'barrelData.txt'
 barrelDF = open(listfile, 'r').read().strip().splitlines()
@@ -225,7 +235,7 @@ barrelDF = open(listfile, 'r').read().strip().splitlines()
 try:
     barrelID=str(int(barrelDF[0].strip()))
 except:
-    log_add("Error: Could not retrieve barrel data.\n")
+    log_add("Error: Could not read barrel data.\n")
 barrelCount=len(barrelDF)-1
 def log(wiki, dump, msg):
     global timeRunning
