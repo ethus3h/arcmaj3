@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.7, 19 December 2013.
+# Version 2.17.7.1, 22 December 2013.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -55,8 +55,8 @@
 # [Done]: auto updater for appliance
 # [Done]: install curl in appliance
 # [Done]: record megawarc filesizes in barrels table
-# [Done]: create an easy way to add projects (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
-# [Done]: create an easy way to add URLs (e. g. visit http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
+# [Done]: create an easy way to add projects (e. g. visit http://10.0.0.4:4353/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addProject&projectSeed=http://blabla.com/&projectPattern=blabla.com and have it added)
+# [Done]: create an easy way to add URLs (e. g. visit http://10.0.0.4:4353/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=addUrl&urlToAdd=http://blabla.com/ and have it added)
 
 # Configuration goes here
 # The optional fourth line of the config file is a comma-separated list of project IDs to crawl.
@@ -188,7 +188,7 @@ now = datetime.datetime.now()
 convertlang = {'ar': 'Arabic', 'de': 'German', 'en': 'English', 'es': 'Spanish', 'fr': 'French', 'it': 'Italian', 'ja': 'Japanese', 'nl': 'Dutch', 'pl': 'Polish', 'pt': 'Portuguese', 'ru': 'Russian'}
 # This is going to be the barrel data
 timeRunning=now.strftime("%Y-%m-%d-%H-%M-%S-%f-%Z_E")
-#os.system('bash -c \'wget -O barrelData.txt "http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\'')
+#os.system('bash -c \'wget -O barrelData.txt "http://10.0.0.4:4353/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\'')
 errored = False
 def run(command):
     global errored
@@ -218,11 +218,11 @@ def hlog_add(text):
     f = open('amc_H3_log-'+timeRunning+'.log', 'a')
     f.write(text+"\n")
     f.close()
-#vamp='bash -c \'wget -O barrelData.txt "http://130.111.242.99/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\''
+#vamp='bash -c \'wget -O barrelData.txt "http://10.0.0.4:4353/d/r/active.php?handler=1&handlerNeeded=arcmaj3&amtask=down"\''
 #barrelFetchResult = check_output(vamp, stderr=subprocess.STDOUT, shell=True)
 barrelID='NoBarrel'
 errored=False
-barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://130.111.242.99/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
+barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://10.0.0.4:4353/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
 if errored == True:
     log_add('Failed to retrieve barrel data. Sleeping 60 seconds…')
     time.sleep(60)
@@ -1208,7 +1208,7 @@ metadata.description=Basic crawl starting with useful defaults
     #active.php?handler=1&handlerNeeded=arcmaj3&amtask=up
     #curl = ['curl', '--location']
     #curl += [ '--data', '\'handler=1&handlerNeeded=arcmaj3&amtask=up&uploadedBarrelData='+pageLinks5.encode('base64')+'&failedUrlData='+failedUrls.encode('base64')+'\'', '-A', "'"+UserAgentChoice+"'" ]
-    #curl += [ "http://130.111.242.99/d/r/active.php" ]
+    #curl += [ "http://10.0.0.4:4353/d/r/active.php" ]
     #curlline = ' '.join(curl)
     #log_add('Executing curl request: ')
     #log_add(curlline+'\n')
@@ -1255,9 +1255,9 @@ metadata.description=Basic crawl starting with useful defaults
     ulog_add('Sleeping 30 seconds to give IA a chance to catch up…')
     time.sleep(30)
     postdata='handler=1&handlerNeeded=arcmaj3&amtask=up'+'&barrelSize='+str(int(barrelSize))+''+'&verd='+verd+'&amloc='+'AMJ_BarrelData_'+barrelID+'_' + uuidG +'.' +timeRunning
-    ulog_add("\n\nPOST data sent to http://130.111.242.99/d/r/active.php: \n\n"+postdata+"\n\n(Barrel ID: "+barrelID+")\n\n")
+    ulog_add("\n\nPOST data sent to http://10.0.0.4:4353/d/r/active.php: \n\n"+postdata+"\n\n(Barrel ID: "+barrelID+")\n\n")
     ulog_add("\n\nWaiting for reply from server for barrel " + str(barrelID) + ": " + str(outlink_count) + " outlinks; " + str(failedUrl_count) + " failed URLs\n\n")
-    req = urllib2.Request('http://130.111.242.99/d/r/active.php', postdata)
+    req = urllib2.Request('http://10.0.0.4:4353/d/r/active.php', postdata)
     req.add_header('User-agent',UserAgentChoice)
     fp = urllib2.urlopen(req)
     #errored = False
