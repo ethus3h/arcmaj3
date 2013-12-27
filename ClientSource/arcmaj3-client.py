@@ -76,6 +76,17 @@ try:
     HerWebPort = open('config.txt', 'r').readlines()[5].strip()
 except Exception, e:
     HerWebPort = '42643'
+try:
+    #Version might be able to be autodetected by running:
+    #  $ openssl version
+    #See http://www.madboa.com/geek/openssl/#intro-version
+    sslType = open('config.txt', 'r').readlines()[6].strip()
+    if sslType == '0':
+        sslTypeS = ''
+    else:
+        sslTypeS = ' --sslv3'
+except Exception, e:
+    sslTypeS = ''
 collection = 'opensource' # Replace with "opensource" if you are not an admin of the collection
 # end configuration
 
@@ -326,6 +337,7 @@ def upload(wikis):
         if os.path.getsize(dump) > barrelSize:
             barrelSize = int(os.path.getsize(dump))
         #creates curl command
+        global sslTypeS
         curl = ['curl', '--location', 
             '--header', "'x-amz-auto-make-bucket:1'", # Creates the item automatically, need to give some time for the item to correctly be created on archive.org, or everything else will fail, showing "bucket not found" error
             '--header', "'x-archive-queue-derive:0'",
@@ -1095,7 +1107,8 @@ metadata.description=Basic crawl starting with useful defaults
 """
     #heritrix it
     log_add('Beginning heritrix processing')
-    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
+    global sslTypeS
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mkdir h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/')
     hres=''
     #hlog_add(run('curl -v -d "createpath='+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'&action=create" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
@@ -1104,10 +1117,10 @@ metadata.description=Basic crawl starting with useful defaults
     f.close()
     #The port: 42643=ARCAE=ARCMAJ3 missing some letters
     hlog_add(run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)[0])
-    hlog_add(run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
-    hlog_add(run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     time.sleep(0.5)
-    hlog_add(run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
     # poll job dir for completion
     jobFinished=False
     while not jobFinished:
@@ -1124,12 +1137,12 @@ metadata.description=Basic crawl starting with useful defaults
             hlog_add('Heritrix not finished')
             print 'Heritrix not finished'
             run('h3/heritrix-3.1.1/bin/heritrix -a admin -p '+HerWebPort)
-            run('curl -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
-            run('curl -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
+            run('curl'+sslTypeS+' -v -d "action=build" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
+            run('curl'+sslTypeS+' -v -d "action=launch" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
             time.sleep(0.5)
-            run('curl -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
-    hlog_add(run('curl -v -d "action=teardown" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
-    hlog_add(run('curl -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
+            run('curl'+sslTypeS+' -v -d "action=unpause" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=teardown" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine/job/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG)[0])
+    hlog_add(run('curl'+sslTypeS+' -v -d "action=Exit+Java+Process&im_sure=on" -k -u admin:admin --anyauth --location https://localhost:'+HerWebPort+'/engine')[0])
     os.system('mv h3/heritrix-3.1.1/jobs/'+'AMJ_BarrelData_'+barrelID+'_' + uuidG+' .')
     os.system('mv '+'AMJ_BarrelData_'+barrelID+'_' + uuidG+'/latest/warcs/*.warc.gz .')
     #hlog_add(hres)
