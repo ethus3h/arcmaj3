@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.8, 27 December 2013.
+# Version 2.17.9, 28 December 2013.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -233,7 +233,7 @@ def hlog_add(text):
 #barrelFetchResult = check_output(vamp, stderr=subprocess.STDOUT, shell=True)
 barrelID='NoBarrel'
 errored=False
-barrelFetchResult = run('bash -c \'wget -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://10.0.0.2:4353/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
+barrelFetchResult = run('bash -c \'wget --no-check-certificate -O barrelData.txt --warc-file=AMJ_BarrelData_' + uuidG + "_BarrelList http://10.0.0.2:4353/d/r/active.php?handler=1\&handlerNeeded=arcmaj3\&amtask=down\&verd="+verd+"\&userName="+userName+"\&projectsToCrawl="+projectsToCrawl+"\&NSConfLmDs="+NSConfLmDs+"\'")
 if errored == True:
     log_add('Failed to retrieve barrel data. Sleeping 60 seconds…')
     time.sleep(60)
@@ -285,7 +285,7 @@ log_add("\nBarrel data: \n"+barrelDataContent+"\n\n")
 #(out, err) = proc.communicate()
 #log_add("\n\n\n\n\nWget output:"+out+"\n\n\n\n\n")
 #log_add("\n\n\n\n\nWget errors:"+error+"\n\n\n\n\n")
-timeFetchResult=run('bash -c \'wget -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
+timeFetchResult=run('bash -c \'wget --no-check-certificate -O now.txt "http://www.timeapi.org/utc/now?\\Y-\\m-\\d-\\H-\\M-\\S-\\6N-\\z"\'')[0]
 
 with open ("now.txt", "r") as timeFile:
     timeRemote=timeFile.read()
@@ -463,7 +463,7 @@ def main():
         #initial command: wget -E -K -p -r -l1 --no-parent --warc-tempdir=. --delete-after --user-agent="Mozilla/5.0 (compatible; MSIE 7.0; 68K; WOW64; Trident/2.0)" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_4148_9f8d370f-aed1-4744-99f5-af860b83eaeb_e8389b55-cb39-40bf-aeb6-f095a3991a78 'http://fisheye.toolserver.org/browse/erfgoed/erfgoedbot/sql/create_view_monuments_all.sql?u=3&r=7.html';
         #in bash wrapper: bash -c 'wget -E -K -p -r -l1 --no-parent --warc-tempdir=. --delete-after --user-agent="Mozilla/5.0 (compatible; MSIE 7.0; 68K; WOW64; Trident/2.0)" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_4148_9f8d370f-aed1-4744-99f5-af860b83eaeb_e8389b55-cb39-40bf-aeb6-f095a3991a78 '\''http://fisheye.toolserver.org/browse/erfgoed/erfgoedbot/sql/create_view_monuments_all.sql?u=3&r=7.html'\'';'
         #in python: downloadFetchResult=run('bash -c \'wget -E -K -p -r -l1 --no-parent --warc-tempdir=. --delete-after --user-agent="Mozilla/5.0 (compatible; MSIE 7.0; 68K; WOW64; Trident/2.0)" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_4148_9f8d370f-aed1-4744-99f5-af860b83eaeb_e8389b55-cb39-40bf-aeb6-f095a3991a78 \'\\\'\'http://fisheye.toolserver.org/browse/erfgoed/erfgoedbot/sql/create_view_monuments_all.sql?u=3&r=7.html\'\\\'\';\'')
-        downloadFetchResult=run('bash -c \'wget -E -K --no-parent --warc-tempdir=. --delete-after --user-agent="'+altUserAgentChoice+'" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_'+barrelID+'_' + uuidG + '_' + uuid_item + ' \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
+        downloadFetchResult=run('bash -c \'wget --no-check-certificate -E -K --no-parent --warc-tempdir=. --delete-after --user-agent="'+altUserAgentChoice+'" -e robots=off --warc-max-size=500M --warc-file=AMJ_BarrelData_'+barrelID+'_' + uuidG + '_' + uuid_item + ' \'\\\'\''+shellesc(wiki)+'\'\\\'\';\'')
         downloadFetchResult=downloadFetchResult[0]
         logFileName = 'log-'+timeRunning+'.log'
         log_add('\n\nDownload fetch output: \n'+downloadFetchResult+"\n\n")
