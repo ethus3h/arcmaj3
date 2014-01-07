@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.86.10, 19 December 2013.
+#Futuramerlin Active Scripting Library. Version 0.87, 7 January 2014.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -1322,6 +1322,9 @@ function arcmaj3_handler()
             //         $ulFailed   = file_get_contents($_FILES['failedUrlData']['tmp_name']);
             $BarrelUrlListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.lst';
             $uBarrelData      = get_url($BarrelUrlListLoc);
+            #REWRITING THIS TO USE A FLAT FILE
+            $BarrelUrlDataLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.fragment';
+            $uBarrelAppendData      = get_url($BarrelUrlDataLoc);
             #echo $uBarrelData;
             #echo $uBarrelData;
             echo "\n\n" . 'List data URL: ' . $BarrelUrlListLoc;
