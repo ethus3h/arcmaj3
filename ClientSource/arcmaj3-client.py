@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.17.9, 28 December 2013.
+# Version 2.18, 7 January 2014.
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -24,6 +24,8 @@
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
+# TODO: Use LOAD DATA LOCAL INFILE to add the URL discovery data
+# TODO: Add by-project exclusion patterns (and pattern sets?)
 # TODO: user statistics tracker
 # TODO: Allow barrels to come in after they've been expired?
 # TODO: Use ww2.futuramerlin.com?
