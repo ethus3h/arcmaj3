@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.87, 7 January 2014 and 8 January 2014 a.mn..
+#Futuramerlin Active Scripting Library. Version 0.87, 8 January 2014.
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -841,7 +841,7 @@ class FractureDB
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
         # from http://stackoverflow.com/questions/7638090/load-data-local-infile-forbidden-in-php
-        exec("mysql -u " . $username . " -p" . $password . " --local-infile -e \"USE " . $this->name . ";LOAD DATA LOCAL INFILE '" . $filename . "' INTO TABLE " . $table . $queryInsert.";\"; ");
+        exec("mysql -u " . $username . " -p" . $password . " --local-infile -e \"USE " . $this->name . ";LOAD DATA LOCAL INFILE '" . $filename . "' IGNORE INTO TABLE " . $table . $queryInsert.";\"; ");
     }
     function getRandomRow($table, $filterField = '', $filterValue = '', $idFieldName = 'id', $limit = 1)
     {
