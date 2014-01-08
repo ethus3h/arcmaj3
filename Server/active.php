@@ -1440,7 +1440,7 @@ function arcmaj3_handler()
                 file_put_contents($filenametowrite, $newUrlDataFile);
                 #LOAD DATA LOCAL INFILE...
                 $db->LoadFromFile($filenametowrite, 'am_urls', 'location, project, locationHashUnique, originBarrel');
-               #unlink($filenametowrite);
+                unlink($filenametowrite);
                 //                 echo "<br>\n";
                 //                 echo 'Added/updated row ';
                 //                 echo $newUrlId;
