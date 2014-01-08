@@ -1,7 +1,7 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.18, 7 January 2014.
+# Version 2.18.1, 8 January 2014 a.mn..
 #
 # Copyright (C) 2011-2012 WikiTeam
 # Arcmaj3 additions copyright 2013 Futuramerlin
@@ -24,7 +24,6 @@
 # https://wiki.archive.org/twiki/bin/view/Main/IAS3BulkUploader
 # http://en.ecgpedia.org/api.php?action=query&meta=siteinfo&siprop=general|rightsinfo&format=xml
 #
-# TODO: Use LOAD DATA LOCAL INFILE to add the URL discovery data
 # TODO: Add by-project exclusion patterns (and pattern sets?)
 # TODO: user statistics tracker
 # TODO: Allow barrels to come in after they've been expired?
@@ -50,6 +49,7 @@
 # [Done, I think]: remove duplicate out/failed URLs client-side to reduce DB server load
 # [Done, I think]: Retain origin barrel data for URLs table
 # [Done, I think]: Gracefully handle a failure to get a barrel because the server's down
+# [Done, I think]: Use LOAD DATA LOCAL INFILE to add the URL discovery data
 # [Done] critical: retry failed URLs
 # [Done] necessary for final release: config file with username & api keys; include example
 # [Done] Project statistics tracker
