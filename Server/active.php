@@ -1330,9 +1330,9 @@ function arcmaj3_handler()
             //         $ulFailed   = file_get_contents($_FILES['failedUrlData']['tmp_name']);
             $BarrelUrlListLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.lst';
             $uBarrelData      = get_url($BarrelUrlListLoc);
-            #REWRITING THIS TO USE A FLAT FILE
-            $BarrelUrlDataLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.fragment';
-            $uBarrelAppendData      = get_url($BarrelUrlDataLoc);
+//             #REWRITING THIS TO USE A FLAT FILE
+//             $BarrelUrlDataLoc = 'https://archive.org/download/' . Rq('amloc') . '/' . 'URLs.fragment';
+//             $uBarrelAppendData      = get_url($BarrelUrlDataLoc);
             #echo $uBarrelData;
             #echo $uBarrelData;
             echo "\n\n" . 'List data URL: ' . $BarrelUrlListLoc;
