@@ -1,10 +1,10 @@
 #!/usr/bin/python
 # -*- coding: utf-8 -*-
 # ARCMAJ3 CLIENT SCRIPT
-# Version 2.18.1, 8 January 2014 a.mn..
+# Version 2.18.3, 8 January 2014.
 #
 # Copyright (C) 2011-2012 WikiTeam
-# Arcmaj3 additions copyright 2013 Futuramerlin
+# Arcmaj3 additions copyright 2013, 2014 Futuramerlin
 # This program is free software: you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
 # the Free Software Foundation, either version 3 of the License, or
@@ -293,12 +293,13 @@ with open ("now.txt", "r") as timeFile:
     timeRemote=timeFile.read()
 log_add("\Current time fetch output: \n"+timeFetchResult+"\n\n")
 log_add("\nCurrent time retrieved remotely: \n"+timeRemote+"\n\n")
-
+statDuro=False
 def upload(wikis):
     global uuidG
     global errored
     global timeRunning
     global barrelID
+    global statDuro
     ulog_add(wikis)
     ulog_add("#"*73)
     ulog_add("# Uploading record")
@@ -370,6 +371,7 @@ def upload(wikis):
         if not (errored or 'XML' in uploadFetchResultB or 'xml' in uploadFetchResultB or 'html' in uploadFetchResultB or 'HTML' in uploadFetchResultB):
             os.system('rm '+dump)
             ulog_add('Removing file: '+dump+'\n')
+            statDuro = True
         else:
             ulog_add('ERROR UPLOADING BARREL. THIS IS NOT GOOD.')
         errored = False
@@ -1267,6 +1269,9 @@ metadata.description=Basic crawl starting with useful defaults
     #Upload barrel data back to base.
     ulog_add('\n\nUploading barrel data back to base.\n\n');
     upload(wikis)
+    if statDuro:
+        ulog_add('Removing remaining files\n')
+        os.system('rm *.warc.gz *.7z *.xz upload-* bucketsCompleted-* barrelsCompleted-* log-* URLs.lst failed.lst *.megawarc.tar *.megawarc.json.gz')
     ulog_add('Sleeping 30 seconds to give IA a chance to catch up…')
     time.sleep(30)
     postdata='handler=1&handlerNeeded=arcmaj3&amtask=up'+'&barrelSize='+str(int(barrelSize))+''+'&verd='+verd+'&amloc='+'AMJ_BarrelData_'+barrelID+'_' + uuidG +'.' +timeRunning
