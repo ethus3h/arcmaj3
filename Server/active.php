@@ -841,7 +841,7 @@ class FractureDB
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
         # from http://stackoverflow.com/questions/7638090/load-data-local-infile-forbidden-in-php
-        exec("mysql -u " . $username . " -p" . $password . " --local-infile -e \"USE " . $this->name . ";LOAD DATA LOCAL INFILE '" . $filename . "' IGNORE INTO TABLE " . $table . $queryInsert.";\"; ");
+        exec("mysql -u " . $username . " -p" . $password . " --local-infile -e \"USE " . $this->name . ";LOAD DATA INFILE '" . $filename . "' IGNORE INTO TABLE " . $table . $queryInsert.";\"; ");
     }
     function getRandomRow($table, $filterField = '', $filterValue = '', $idFieldName = 'id', $limit = 1)
     {
