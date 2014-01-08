@@ -1,5 +1,5 @@
 <?php
-#Futuramerlin Active Scripting Library. Version 0.87, 7 January 2014.
+#Futuramerlin Active Scripting Library. Version 0.87, 7 January 2014 and 8 January 2014 a.mn..
 #Some code based on StudyMaster; some based on the other d/r scripts.
 #Useful SQL commands:
 #
@@ -829,13 +829,19 @@ class FractureDB
         $rowData = $this->query($query);
         return $rowData;
     }
-    function LoadFromFile($filename, $table)
+    function LoadFromFile($filename, $table, $columnList)
     {
+
+        if ($columnList !== '') {
+            $queryInsert = ' ('.$columnList.')';
+        } else {
+            $queryInsert = '';
+        }
         global $db_data;
         $username = $db_data[$this->name][0];
         $password = $db_data[$this->name][1];
         # from http://stackoverflow.com/questions/7638090/load-data-local-infile-forbidden-in-php
-        exec("mysql -u " . $username . " -p" . $password . " -e \"USE " . $this->name . ";LOAD DATA LOCAL INFILE '" . $filename . "' INTO TABLE " . $table . ";\"; ");
+        exec("mysql -u " . $username . " -p" . $password . " -e \"USE " . $this->name . ";LOAD DATA LOCAL INFILE '" . $filename . "' INTO TABLE " . $table . $queryInsert.";\"; ");
     }
     function getRandomRow($table, $filterField = '', $filterValue = '', $idFieldName = 'id', $limit = 1)
     {
@@ -1360,8 +1366,8 @@ function arcmaj3_handler()
             $barrelId       = $barrelData[0];
             $barrelUserName = $barrelData[1];
             $db             = new FractureDB('futuqiur_arcmaj3');
-            $urlsFinished   = $db->getRows('am_urls', 'barrel', $barrelId);
-            $urlsFinished   = $urlsFinished[0];
+            //             $urlsFinished   = $db->getRows('am_urls', 'barrel', $barrelId);
+            //             $urlsFinished   = $urlsFinished[0];
             $barrelSize     = Rq('barrelSize');
             #Set status to 1. Set who to $barrelUserName.
             $db->setField('am_barrels', 'ia_identifier', Rq('amloc'), $barrelId);
@@ -1369,6 +1375,7 @@ function arcmaj3_handler()
             #$pps              = $db->getColumn('am_projects', 'urlPattern');
             $pptb = $db->getTable('am_projects');
             #echo '<H1>ENTERING GENERAL ROW PROCESSING</H1>';
+            $newUrlDataFile = '';
             foreach ($barrelData as $value) {
                 #Add URL to URL list.
                 $testProjects     = False;
@@ -1420,20 +1427,20 @@ function arcmaj3_handler()
                 //                 $projectId = $projects['id'];
                 $projectId      = $potentialProject;
                 #$projectId=1;
-                $newUrlDataFile = '';
                 if ($testProjects) {
-                    $db->SaveState();
+                    #$db->SaveState();
                     
                     #$newUrlId = $db->addRowFuzzy('am_urls', 'location, project, locationHashUnique, originBarrel', "'" . $db->UrlEscS($value) . "', '" . $projectId . "', '" . hash('sha512', $db->UrlEscS($value)) . "', '" . $barrelId . "'");
                     #Generate line for the URL data file
-                    $newUrlDataFile .= $db->UrlEscS($value) . "\t" . $projectId . "\t" . hash('sha512', $db->UrlEscS($value)) . "\t" . $barrelId . "\n";
+                    #echo $db->UrlEscS($value) . "\t" . $projectId . "\t" . hash('sha512', $db->UrlEscS($value)) . "\t" . $barrelId . "\n";
+                    $newUrlDataFile = $newUrlDataFile.$db->UrlEscS($value) . "\t" . $projectId . "\t" . hash('sha512', $db->UrlEscS($value)) . "\t" . $barrelId . "\n";
                     
                 }
                 $filenametowrite = '/.Arcmaj3ServerTemp/' . str_replace('/', '', Rq('amloc')) . '.fragment';
                 file_put_contents($filenametowrite, $newUrlDataFile);
                 #LOAD DATA LOCAL INFILE...
-                $db->LoadFromFile($filenametowrite, 'am_urls');
-                unlink($filenametowrite);
+                $db->LoadFromFile($filenametowrite, 'am_urls', 'location, project, locationHashUnique, originBarrel');
+               #unlink($filenametowrite);
                 //                 echo "<br>\n";
                 //                 echo 'Added/updated row ';
                 //                 echo $newUrlId;
